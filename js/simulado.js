@@ -449,23 +449,57 @@ async function finalizarSimulado() {
   const errorContainer = document.getElementById('error-items-container');
   if (erros.length > 0) {
     errorReport.style.display = 'block';
-    errorContainer.innerHTML = erros.map(q => `
-      <div class="error-item">
-        <span class="error-question">${q.enunciado.substring(0, 60)}...</span>
-        <span class="error-fix" onclick="verExplicacao(${_questoes.indexOf(q)})">Ver explicação completa</span>
-      </div>
-    `).join('');
+    errorContainer.innerHTML = erros.map((q, i) => {
+      const letras = ['A', 'B', 'C', 'D', 'E'];
+      const indexRespondido = _respostasUsuario[q.id];
+      const respostaAluno = indexRespondido !== undefined
+        ? `${letras[indexRespondido]}. ${q.alternativas[indexRespondido]}`
+        : 'Não respondida';
+      const respostaCorreta = `${letras[q.gabarito]}. ${q.alternativas[q.gabarito]}`;
+      const cardId = `review-card-${i}`;
+
+      return `
+        <div class="review-card" id="${cardId}">
+          <div class="review-header">
+            <div class="review-numero">Questão ${_questoes.indexOf(q) + 1}</div>
+          </div>
+
+          <div class="review-enunciado">${q.enunciado}</div>
+
+          <div class="review-respostas">
+            <div class="review-linha errada">
+              <span class="review-label">Sua resposta:</span>
+              <span class="review-valor">${respostaAluno}</span>
+            </div>
+
+            <div class="review-linha correta">
+              <span class="review-label">Resposta correta:</span>
+              <span class="review-valor">${respostaCorreta}</span>
+            </div>
+          </div>
+
+          ${q.explicacao ? `
+            <button class="review-btn-explicacao" type="button" onclick="toggleExplicacao('${cardId}')">💡 Ver explicação</button>
+            <div class="review-explicacao" id="exp-${cardId}" style="display:none;">
+              ${q.explicacao}
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }).join('');
   }
 
   // Auto-save ao finalizar
   await salvarAutomatico();
 }
 
-window.verExplicacao = (index) => {
-  _indiceAtual = index;
-  document.getElementById('resultado-final').style.display = 'none';
-  document.getElementById('quiz-screen').style.display = 'block';
-  renderizarQuestao();
+window.toggleExplicacao = (cardId) => {
+  const exp = document.getElementById(`exp-${cardId}`);
+  const btn = document.querySelector(`#${cardId} .review-btn-explicacao`);
+  if (!exp) return;
+  const aberto = exp.style.display === 'block';
+  exp.style.display = aberto ? 'none' : 'block';
+  btn.textContent = aberto ? '💡 Ver explicação' : '🔼 Ocultar explicação';
 };
 
 function getCurrentWeekStart() {
