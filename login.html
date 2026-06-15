@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entrar — SimuladoTop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  
+  <!-- ═══ AUTENTICAÇÃO - Carregado no head com defer ═══ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/auth-check.js" defer></script>
+
+  <style>
+    .auth-container {
+      max-width: 400px;
+      margin: 60px auto;
+      padding: 32px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-align: center;
+    }
+
+    .auth-header h1 {
+      font-family: var(--font-head);
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .auth-header p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      text-align: left;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .form-group input {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      color: var(--text);
+      font-family: var(--font-body);
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .btn-auth {
+      background: var(--accent);
+      color: #0d0f14;
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: opacity 0.2s;
+      margin-top: 8px;
+    }
+
+    .btn-auth:hover {
+      opacity: 0.9;
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 24px 0;
+      color: var(--border);
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .auth-divider span {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .btn-google {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 500;
+      padding: 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-google:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: var(--muted);
+    }
+
+    .btn-google img {
+      width: 18px;
+      height: 18px;
+    }
+
+    .auth-footer {
+      margin-top: 24px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .auth-footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .auth-footer a:hover {
+      text-decoration: underline;
+    }
+
+    #auth-message {
+      margin-top: 16px;
+      font-size: 0.85rem;
+      padding: 10px;
+      border-radius: 6px;
+      display: none;
+    }
+
+    .msg-error {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--wrong);
+      border: 1px solid var(--wrong);
+    }
+
+    .msg-success {
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--correct);
+      border: 1px solid var(--correct);
+    }
+    /* Quando o campo de nome estiver escondido (Modo Login), o link aparece */
+#login-form #group-name[style*="display: none"] ~ #recuperar-senha-container {
+    display: block !important;
+}
+
+/* Quando o campo de nome estiver visível (Modo Cadastro), o link some */
+#login-form #group-name:not([style*="display: none"]) ~ #recuperar-senha-container {
+    display: none !important;
+}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="index.html">Simulado<span>Top</span></a>
+    <div class="header-nav">
+      <a href="index.html">Início</a>
+    <a href="ranking.html">Ranking</a>
+      <a href="blog.html">Blog</a>
+      <div id="auth-container" class="auth-actions" aria-label="Ações de autenticação"></div>
+    </div>
+  </div>
+</header>
+
+<div class="page-wrap">
+  <div class="auth-container">
+    <div class="auth-header">
+      <h1 id="auth-title">Bem-vindo de volta</h1>
+      <p id="auth-subtitle">Entre na sua conta para salvar seu progresso</p>
+    </div>
+
+    <form class="auth-form" id="login-form">
+      <div class="form-group" id="group-name" style="display: none;">
+        <label for="name">Nome Completo</label>
+        <input type="text" id="name" placeholder="Seu nome" />
+      </div>
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" placeholder="seu@email.com" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <input type="password" id="password" placeholder="••••••••" required />
+      </div>
+      
+     <div id="recuperar-senha-container" style="text-align: center; margin: 15px 0 25px 0;">
+    <a href="#" id="forgot-password-link" style="font-size: .9rem; color: var(--accent); text-decoration: none; font-weight: 500;">Esqueci minha senha</a>
+</div>
+
+<button type="submit" class="btn-auth" id="btn-submit">Entrar</button>
+
+<div id="auth-message"></div>
+</form>
+
+<div class="auth-divider">
+    <span>ou</span>
+</div>
+
+<div style="display: flex; justify-content: center; width: 100%;">
+    <button class="btn-google" id="btn-google" style="margin: 0 auto;">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" />
+        Entrar com o Google
+    </button>
+</div>
+
+    <div class="auth-footer">
+      <span id="footer-text">Não tem uma conta?</span>
+      <a href="#" id="toggle-auth">Criar Conta</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-container">
+    <div class="footer-brand">
+      <span class="logo-text">Simulado<span class="logo-highlight">Top</span></span>
+    </div>
+
+    <div class="footer-nav">
+      <a href="sobre.html">Sobre</a>
+      <a href="privacidade.html">Privacidade</a>
+      <a href="termos.html">Termos de Uso</a>
+    </div>
+
+    <hr class="footer-line">
+
+    <div class="footer-info">
+      <p class="footer-text">Este site não possui vínculo com as instituições organizadoras dos concursos e vestibulares citados. As questões são baseadas em provas anteriores de domínio público.</p>
+      <p class="footer-text">© 2026 SimuladoTop — Todos os direitos reservados.</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
+
+

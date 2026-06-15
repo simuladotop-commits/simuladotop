@@ -1,0 +1,88 @@
+﻿:root {
+  --fundo-principal: #0d0e12;
+  --fundo-painel: #13141a;
+  --texto-puro: #ffffff;
+  --texto-principal: #f8fafc;
+  --texto-secundario: #64748b;
+  --texto-apagado: #334155;
+  --cor-destaque: #f59e0b;
+  --cor-borda: #1f2029;
+  --cor-alerta: #d97706;
+  --raio-borda: 4px;
+  --transicao-suave: all 0.2s ease-in-out;
+}
+body { background-color: var(--fundo-principal) !important; color: var(--texto-principal) !important; font-family: Inter, system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
+h1, h2, h3, h4 { color: var(--texto-puro); font-weight: 600; letter-spacing: -0.02em; margin: 0; }
+.btn-primary, .add-prova-btn, .action-btn-main { background: transparent !important; border: 1px solid var(--cor-destaque) !important; color: var(--cor-destaque) !important; padding: 8px 16px !important; font-size: 0.815rem !important; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border-radius: var(--raio-borda); cursor: pointer; transition: var(--transicao-suave); }
+.btn-primary:hover, .add-prova-btn:hover, .action-btn-main:hover { background: var(--cor-destaque) !important; color: var(--fundo-principal) !important; box-shadow: 0 0 12px rgba(245, 158, 11, 0.15); }
+.alert-box, .warning-banner, .status-info { background: transparent !important; border: none !important; border-left: 2px solid var(--cor-alerta) !important; padding: 6px 0 6px 16px !important; margin: 20px 0 !important; }
+.alert-box p, .warning-banner text, .status-info span { color: var(--cor-destaque) !important; font-size: 0.85rem !important; margin: 0; }
+.table-container, .main-card-list { background: transparent !important; border: none !important; border-top: 1px solid var(--cor-borda) !important; margin-top: 24px; }
+table { width: 100%; border-collapse: collapse; }
+th { color: var(--texto-secundario) !important; font-size: 0.75rem !important; text-transform: uppercase; letter-spacing: 0.05em !important; font-weight: 500; padding: 16px 12px !important; text-align: left; border-bottom: 1px solid var(--cor-borda) !important; }
+td { padding: 18px 12px !important; color: var(--texto-principal) !important; font-size: 0.875rem !important; border-bottom: 1px solid var(--cor-borda) !important; }
+tr:hover td { color: var(--texto-puro) !important; background-color: rgba(255, 255, 255, 0.01); }
+.empty-state { padding: 80px 0 !important; color: var(--texto-apagado) !important; font-style: italic; font-size: 0.875rem; text-align: center; }
+
+/* ── RESPONSIVE ADMIN PANEL ── */
+@media (max-width: 980px) {
+  .dashboard-shell { flex-direction: column; }
+  .dashboard-sidebar {
+    width: 100%;
+    min-width: unset;
+    position: static;
+    padding: 18px 16px 16px;
+  }
+  .dashboard-nav { flex-direction: row; flex-wrap: wrap; gap: 8px; }
+  .dashboard-nav a { flex: 1 1 48%; }
+}
+
+@media (max-width: 680px) {
+  .dashboard-sidebar { padding: 14px 14px; }
+  .dashboard-main { padding: 16px; }
+  .dashboard-metrics { grid-template-columns: 1fr; }
+  .metric-card { padding: 18px; }
+  .table-container, .main-card-list { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { min-width: 100%; }
+  th, td { white-space: nowrap; }
+  input, select, textarea, button { width: 100% !important; min-height: 44px !important; }
+  .btn-primary, .add-prova-btn, .action-btn-main { width: 100% !important; min-height: 44px !important; padding: 12px 16px !important; }
+}
+
+@media (max-width: 768px) {
+  .ad-shell { flex-direction: column; }
+  .ad-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: min(280px, 80%);
+    max-width: 280px;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 320;
+    box-shadow: 20px 0 40px rgba(0,0,0,0.35);
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .ad-sidebar.open { transform: translateX(0); }
+  .ad-sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease;
+    z-index: 310;
+  }
+  .ad-sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  .ad-main { width: 100%; }
+  .ad-topbar { position: sticky; top: 0; z-index: 300; }
+  .ad-content { padding: 20px; }
+  .ad-page-head { flex-direction: column; align-items: stretch; gap: 18px; }
+  .ad-metrics { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  .ad-metric-card { min-width: 0; }
+}

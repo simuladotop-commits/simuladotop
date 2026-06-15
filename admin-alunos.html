@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Painel de gestão de alunos do SimuladoTop para monitorar e revisar perfis de estudantes." />
+  <title>Gerenciar Alunos — SimuladoTop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/admin-theme.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/auth-check.js" defer></script>
+  <script type="module" defer>
+    import { checkAccess } from './js/auth-guard.js';
+    import { initAdminAlunos } from './js/admin-alunos.js';
+
+    async function initializeAdminAlunos() {
+      try {
+        document.body.style.visibility = 'hidden';
+        const allowed = await checkAccess('admin');
+        if (!allowed) return;
+
+        const adminMain = document.getElementById('admin-main');
+        if (adminMain) {
+          adminMain.classList.remove('hide-before-auth');
+        }
+
+        document.body.style.visibility = 'visible';
+        await initAdminAlunos();
+      } catch (err) {
+        console.error('Erro na validação inicial de acesso:', err);
+        window.location.href = 'index.html';
+      }
+    }
+
+    initializeAdminAlunos();
+  </script>
+</head>
+<body class="admin-dashboard">
+  <header>
+    <div class="header-inner">
+      <a class="logo" href="index.html">Simulado<span>Top</span></a>
+      <div class="header-nav">
+        <a href="index.html">Início</a>
+        <a href="ranking.html">Ranking</a>
+        <a href="blog.html">Blog</a>
+        <div id="auth-container" class="auth-actions" aria-label="Ações de autenticação"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="admin-main" class="admin-main hide-before-auth">
+    <div id="admin-content" class="dashboard-loading-shell">
+      <div class="loading-panel">
+        <div class="skeleton-card short"></div>
+        <div class="skeleton-grid three-cols">
+          <div class="skeleton-card medium"></div>
+          <div class="skeleton-card medium"></div>
+          <div class="skeleton-card medium"></div>
+        </div>
+        <div class="skeleton-card tall"></div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
+
+

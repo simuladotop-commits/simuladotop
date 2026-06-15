@@ -1,0 +1,285 @@
+{
+  "titulo": "Simulado Completo: Matemática (ENEM/Concursos)",
+  "questoes": [
+    {
+      "id": 1,
+      "enunciado": "Se log(x) + log(x+3) = 1, qual o valor de x? (Considere log na base 10)",
+      "alternativas": ["2", "5", "1", "10", "-5"],
+      "gabarito": 0,
+      "explicacao": "Pelas propriedades dos logaritmos, log(x(x+3)) = 1, o que implica x² + 3x = 10¹. Resolvendo a equação x² + 3x - 10 = 0, temos as raízes 2 e -5. Como o logaritmando deve ser positivo, x = 2."
+    },
+    {
+      "id": 2,
+      "enunciado": "Qual a área de um triângulo equilátero de lado 6 cm?",
+      "alternativas": ["9√3 cm²", "18√3 cm²", "36√3 cm²", "12√3 cm²", "6√3 cm²"],
+      "gabarito": 0,
+      "explicacao": "A fórmula da área do triângulo equilátero é A = (l²√3)/4. Substituindo l=6: A = (36√3)/4 = 9√3 cm²."
+    },
+    {
+      "id": 3,
+      "enunciado": "Uma urna contém 5 bolas brancas e 3 bolas pretas. Ao retirar duas bolas simultaneamente, qual a probabilidade de ambas serem brancas?",
+      "alternativas": ["5/14", "25/64", "5/8", "10/28", "15/56"],
+      "gabarito": 0,
+      "explicacao": "Total de combinações de 8 bolas tomadas 2 a 2: C(8,2) = 28. Combinações de 5 bolas brancas tomadas 2 a 2: C(5,2) = 10. Probabilidade = 10/28 = 5/14."
+    },
+    {
+      "id": 4,
+      "enunciado": "Qual o valor de x na equação 2^(x+1) + 2^x = 48?",
+      "alternativas": ["4", "3", "5", "6", "2"],
+      "gabarito": 0,
+      "explicacao": "2^x * 2 + 2^x = 48 => 3 * 2^x = 48 => 2^x = 16 => x = 4."
+    },
+    {
+      "id": 5,
+      "enunciado": "Determine o volume de um cilindro reto com raio da base 3m e altura 5m.",
+      "alternativas": ["45π m³", "15π m³", "30π m³", "9π m³", "25π m³"],
+      "gabarito": 0,
+      "explicacao": "V = Ab * h = π * r² * h = π * 3² * 5 = 45π m³."
+    },
+    {
+      "id": 6,
+      "enunciado": "Em uma progressão aritmética (PA), o primeiro termo é 5 e a razão é 3. Qual o 20º termo?",
+      "alternativas": ["62", "65", "60", "59", "68"],
+      "gabarito": 0,
+      "explicacao": "an = a1 + (n-1)r. a20 = 5 + (19 * 3) = 5 + 57 = 62."
+    },
+    {
+      "id": 7,
+      "enunciado": "Qual a derivada da função f(x) = x³ - 5x + 2?",
+      "alternativas": ["3x² - 5", "x² - 5", "3x² + 5", "3x³ - 5", "x³ - 5"],
+      "gabarito": 0,
+      "explicacao": "Aplicando a regra do tombo: f'(x) = 3x^(3-1) - 5x^(1-1) + 0 = 3x² - 5."
+    },
+    {
+      "id": 8,
+      "enunciado": "Se sen(x) = 0,6 e x está no primeiro quadrante, qual o valor de cos(x)?",
+      "alternativas": ["0,8", "0,4", "0,5", "0,7", "0,2"],
+      "gabarito": 0,
+      "explicacao": "Pela identidade fundamental: sen²x + cos²x = 1. (0,6)² + cos²x = 1 => 0,36 + cos²x = 1 => cos²x = 0,64 => cos(x) = 0,8."
+    },
+    {
+      "id": 9,
+      "enunciado": "Qual o valor da determinante da matriz [[2, 3], [1, 4]]?",
+      "alternativas": ["5", "11", "8", "7", "2"],
+      "gabarito": 0,
+      "explicacao": "Det = (2*4) - (3*1) = 8 - 3 = 5."
+    },
+    {
+      "id": 10,
+      "enunciado": "Uma calça custava R$ 120,00 e sofreu um desconto de 15%. Qual o novo preço?",
+      "alternativas": ["R$ 102,00", "R$ 105,00", "R$ 108,00", "R$ 100,00", "R$ 95,00"],
+      "gabarito": 0,
+      "explicacao": "Desconto = 120 * 0,15 = 18. Preço final = 120 - 18 = 102."
+    },
+    {
+      "id": 11,
+      "enunciado": "Quantos anagramas possui a palavra 'CASA'?",
+      "alternativas": ["12", "24", "6", "4", "48"],
+      "gabarito": 0,
+      "explicacao": "Permutação com repetição: P = 4! / 2! (pela repetição do A) = 24 / 2 = 12."
+    },
+    {
+      "id": 12,
+      "enunciado": "A soma dos ângulos internos de um hexágono regular é:",
+      "alternativas": ["720°", "540°", "900°", "360°", "1080°"],
+      "gabarito": 0,
+      "explicacao": "S = (n-2) * 180°. Para n=6: S = (6-2) * 180 = 4 * 180 = 720°."
+    },
+    {
+      "id": 13,
+      "enunciado": "Qual a mediana do conjunto de dados {2, 5, 8, 3, 10, 12, 7}?",
+      "alternativas": ["7", "8", "5", "3", "10"],
+      "gabarito": 0,
+      "explicacao": "Ordenando: {2, 3, 5, 7, 8, 10, 12}. O termo central é 7."
+    },
+    {
+      "id": 14,
+      "enunciado": "Se f(x) = 2x + 3, qual a função inversa f⁻¹(x)?",
+      "alternativas": ["(x-3)/2", "(x+3)/2", "x/2 - 3", "2x - 3", "3x + 2"],
+      "gabarito": 0,
+      "explicacao": "y = 2x + 3 => x = 2y + 3 => x - 3 = 2y => y = (x - 3)/2."
+    },
+    {
+      "id": 15,
+      "enunciado": "O valor de tg(45°) é:",
+      "alternativas": ["1", "√2", "√3/3", "0", "∞"],
+      "gabarito": 0,
+      "explicacao": "tg(45°) = sen(45°)/cos(45°) = (√2/2) / (√2/2) = 1."
+    },
+    {
+      "id": 16,
+      "enunciado": "Determine o valor de x na proporção 3/4 = x/12.",
+      "alternativas": ["9", "6", "8", "12", "4"],
+      "gabarito": 0,
+      "explicacao": "Multiplicando em cruz: 4x = 36 => x = 9."
+    },
+    {
+      "id": 17,
+      "enunciado": "Qual o próximo termo da sequência (2, 4, 8, 16, ...)?",
+      "alternativas": ["32", "24", "20", "64", "48"],
+      "gabarito": 0,
+      "explicacao": "Trata-se de uma PG de razão 2. 16 * 2 = 32."
+    },
+    {
+      "id": 18,
+      "enunciado": "A hipotenusa de um triângulo retângulo com catetos 9 e 12 é:",
+      "alternativas": ["15", "21", "18", "13", "17"],
+      "gabarito": 0,
+      "explicacao": "h² = 9² + 12² = 81 + 144 = 225. h = √225 = 15."
+    },
+    {
+      "id": 19,
+      "enunciado": "Qual a raiz quadrada de 0,04?",
+      "alternativas": ["0,2", "0,02", "0,4", "0,002", "2"],
+      "gabarito": 0,
+      "explicacao": "√0,04 = √(4/100) = 2/10 = 0,2."
+    },
+    {
+      "id": 20,
+      "enunciado": "Qual a solução do sistema {x + y = 10, x - y = 2}?",
+      "alternativas": ["x=6, y=4", "x=5, y=5", "x=7, y=3", "x=8, y=2", "x=4, y=6"],
+      "gabarito": 0,
+      "explicacao": "Somando as equações: 2x = 12 => x = 6. Substituindo: 6 + y = 10 => y = 4."
+    },
+    {
+      "id": 21,
+      "enunciado": "Qual o valor de 5! (fatorial de 5)?",
+      "alternativas": ["120", "60", "24", "100", "150"],
+      "gabarito": 0,
+      "explicacao": "5! = 5 * 4 * 3 * 2 * 1 = 120."
+    },
+    {
+      "id": 22,
+      "enunciado": "Um polígono de 5 lados é chamado de:",
+      "alternativas": ["Pentágono", "Hexágono", "Quadrilátero", "Heptágono", "Octógono"],
+      "gabarito": 0,
+      "explicacao": "Pentágono é o polígono de 5 lados."
+    },
+    {
+      "id": 23,
+      "enunciado": "A equação da reta que passa pelo ponto (1,2) com coeficiente angular m=3 é:",
+      "alternativas": ["y = 3x - 1", "y = 3x + 1", "y = 2x + 3", "y = 3x + 2", "y = x + 3"],
+      "gabarito": 0,
+      "explicacao": "y - y1 = m(x - x1) => y - 2 = 3(x - 1) => y - 2 = 3x - 3 => y = 3x - 1."
+    },
+    {
+      "id": 24,
+      "enunciado": "O valor de cos(0°) é:",
+      "alternativas": ["1", "0", "1/2", "-1", "√3/2"],
+      "gabarito": 0,
+      "explicacao": "No círculo trigonométrico, o cosseno de 0° é 1."
+    },
+    {
+      "id": 25,
+      "enunciado": "Qual o volume de um cubo de aresta 4 cm?",
+      "alternativas": ["64 cm³", "16 cm³", "32 cm³", "48 cm³", "12 cm³"],
+      "gabarito": 0,
+      "explicacao": "V = a³ = 4³ = 64 cm³."
+    },
+    {
+      "id": 26,
+      "enunciado": "Simplificando a expressão (x² - 4)/(x - 2), obtemos:",
+      "alternativas": ["x + 2", "x - 2", "x", "2", "x²"],
+      "gabarito": 0,
+      "explicacao": "x² - 4 é uma diferença de quadrados: (x-2)(x+2). Dividindo por (x-2), resta x+2."
+    },
+    {
+      "id": 27,
+      "enunciado": "A média aritmética de 10, 20, 30 e 40 é:",
+      "alternativas": ["25", "20", "30", "35", "22"],
+      "gabarito": 0,
+      "explicacao": "(10 + 20 + 30 + 40) / 4 = 100 / 4 = 25."
+    },
+    {
+      "id": 28,
+      "enunciado": "Se um círculo tem diâmetro 10 cm, qual sua circunferência? (Use π = 3,14)",
+      "alternativas": ["31,4 cm", "15,7 cm", "62,8 cm", "100 cm", "314 cm"],
+      "gabarito": 0,
+      "explicacao": "C = π * d = 3,14 * 10 = 31,4 cm."
+    },
+    {
+      "id": 29,
+      "enunciado": "Qual o valor de i² (unidade imaginária)?",
+      "alternativas": ["-1", "1", "0", "i", "-i"],
+      "gabarito": 0,
+      "explicacao": "Por definição, i = √-1, logo i² = -1."
+    },
+    {
+      "id": 30,
+      "enunciado": "Em um triângulo, a soma dos ângulos internos é sempre:",
+      "alternativas": ["180°", "360°", "90°", "270°", "300°"],
+      "gabarito": 0,
+      "explicacao": "A soma dos ângulos internos de qualquer triângulo plano é 180°."
+    },
+    {
+      "id": 31,
+      "enunciado": "Qual o valor de x na equação log₂(x) = 5?",
+      "alternativas": ["32", "10", "25", "16", "64"],
+      "gabarito": 0,
+      "explicacao": "Pela definição de log: 2⁵ = x => x = 32."
+    },
+    {
+      "id": 32,
+      "enunciado": "O que é um número primo?",
+      "alternativas": ["Divisível apenas por 1 e por ele mesmo", "Divisível por 2", "Termina em 1, 3, 7 ou 9", "Não pode ser dividido", "Divisível por todos os números ímpares"],
+      "gabarito": 0,
+      "explicacao": "Números primos são números naturais maiores que 1 que possuem apenas dois divisores: 1 e o próprio número."
+    },
+    {
+      "id": 33,
+      "enunciado": "Qual a área de um círculo de raio 2m? (Use π = 3,14)",
+      "alternativas": ["12,56 m²", "6,28 m²", "25,12 m²", "4 m²", "8 m²"],
+      "gabarito": 0,
+      "explicacao": "A = π * r² = 3,14 * 2² = 3,14 * 4 = 12,56 m²."
+    },
+    {
+      "id": 34,
+      "enunciado": "Qual o valor de x se 3x + 5 = 20?",
+      "alternativas": ["5", "15", "10", "3", "7"],
+      "gabarito": 0,
+      "explicacao": "3x = 20 - 5 => 3x = 15 => x = 5."
+    },
+    {
+      "id": 35,
+      "enunciado": "Um ângulo de 90° é chamado de:",
+      "alternativas": ["Ângulo Reto", "Ângulo Agudo", "Ângulo Obtuso", "Ângulo Raso", "Ângulo Pleno"],
+      "gabarito": 0,
+      "explicacao": "Ângulo reto é aquele que mede exatamente 90°."
+    },
+    {
+      "id": 36,
+      "enunciado": "Qual o valor de 2³ * 2²?",
+      "alternativas": ["32", "16", "64", "12", "10"],
+      "gabarito": 0,
+      "explicacao": "Pelas propriedades de potência: 2^(3+2) = 2⁵ = 32."
+    },
+    {
+      "id": 37,
+      "enunciado": "Se f(x) = x², qual o valor de f(-3)?",
+      "alternativas": ["9", "-9", "6", "-6", "0"],
+      "gabarito": 0,
+      "explicacao": "f(-3) = (-3)² = 9."
+    },
+    {
+      "id": 38,
+      "enunciado": "O teorema de Pitágoras aplica-se a triângulos:",
+      "alternativas": ["Retângulos", "Equiláteros", "Isósceles", "Acutângulos", "Obtusângulos"],
+      "gabarito": 0,
+      "explicacao": "O teorema de Pitágoras é válido apenas para triângulos que possuem um ângulo reto (90°)."
+    },
+    {
+      "id": 39,
+      "enunciado": "Qual a soma de 1/2 + 1/4?",
+      "alternativas": ["3/4", "2/6", "1/6", "1/2", "1"],
+      "gabarito": 0,
+      "explicacao": "MMC(2,4) = 4. (2/4) + (1/4) = 3/4."
+    },
+    {
+      "id": 40,
+      "enunciado": "Quantos minutos há em 2 horas e 15 minutos?",
+      "alternativas": ["135", "120", "150", "115", "145"],
+      "gabarito": 0,
+      "explicacao": "(2 * 60) + 15 = 120 + 15 = 135 minutos."
+    }
+  ]
+}

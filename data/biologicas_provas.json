@@ -1,0 +1,26 @@
+[
+  {
+    "id": "bio-001",
+    "titulo": "Citologia e Organelas",
+    "questoes_total": 20,
+    "tempo_minutos": 45,
+    "dificuldade": "Média",
+    "slug": "citologia-organelas"
+  },
+  {
+    "id": "gen-001",
+    "titulo": "Leis de Mendel",
+    "questoes_total": 15,
+    "tempo_minutos": 35,
+    "dificuldade": "Difícil",
+    "slug": "leis-mendel"
+  },
+  {
+    "id": "eco-001",
+    "titulo": "Cadeias Alimentares",
+    "questoes_total": 12,
+    "tempo_minutos": 25,
+    "dificuldade": "Fácil",
+    "slug": "cadeias-alimentares"
+  }
+]

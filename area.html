@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SimuladoTop — Área de Estudo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  
+  <!-- ═══ AUTENTICAÇÃO - Carregado no head com defer ═══ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/auth-check.js" defer></script>
+  
+  <style>
+    .page-hero { padding: 42px 0 20px; }
+    .page-eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      color: var(--accent); font-size: 0.78rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;
+    }
+    .page-hero h1 {
+      font-family: var(--font-head); font-size: clamp(2.2rem, 4vw, 3rem);
+      line-height: 1; margin-bottom: 12px;
+    }
+    .page-hero p { color: var(--muted); max-width: 680px; margin-bottom: 28px; }
+    @media (max-width: 640px) { .page-hero { padding-top: 30px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <a class="logo" href="index.html">Simulado<span>Top</span></a>
+      <div class="header-nav">
+        <a href="index.html">Início</a>
+        <a href="ranking.html">Ranking</a>
+        <a href="blog.html">Blog</a>
+        <div id="auth-container" class="auth-actions" aria-label="Ações de autenticação"></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="site-wrap">
+    <section class="page-hero">
+      <p class="page-eyebrow" id="area-label">Carregando...</p>
+      <h1 id="area-title">Preparando simulados</h1>
+      <p id="area-desc">Selecione uma prova abaixo para iniciar seu treinamento ativo.</p>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>Provas disponíveis</h2>
+        <p>Pratique com simulados focados nos principais vestibulares e processos seletivos.</p>
+      </div>
+
+      <div class="category-grid" id="provas-grid">
+        <!-- Renderizado dinamicamente -->
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <span class="logo-text">Simulado<span class="logo-highlight">Top</span></span>
+      </div>
+
+      <div class="footer-nav">
+        <a href="sobre.html">Sobre</a>
+        <a href="privacidade.html">Privacidade</a>
+        <a href="termos.html">Termos de Uso</a>
+      </div>
+
+      <hr class="footer-line">
+
+      <div class="footer-info">
+        <p class="footer-text">Este site não possui vínculo com as instituições organizadoras dos concursos e vestibulares citados. As questões são baseadas em provas anteriores de domínio público.</p>
+        <p class="footer-text">© 2026 SimuladoTop — Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+<script>
+    async function buscarProvasSupabase(area) {
+  let tentativas = 0;
+  while (typeof window._supabase === 'undefined' && tentativas < 50) {
+    await new Promise(r => setTimeout(r, 100));
+    tentativas++;
+  }
+
+  if (typeof window._supabase === 'undefined') return null;
+
+  try {
+    // ← Query construída de uma vez só, sem encadeamento condicional
+    const { data, error } = await window._supabase
+      .from('simulados')
+      .select('id, title, area, materia, status, slug, created_at')
+      .eq('status', 'ativa')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('[area] Erro Supabase:', error);
+      return null;
+    }
+
+    // Filtra por área no JS — evita problema com ilike no PostgREST
+    const filtrado = (data || []).filter(p =>
+      p.area?.toLowerCase() === area.toLowerCase()
+    );
+
+    return filtrado;
+
+  } catch (err) {
+    console.warn('[area] Supabase indisponível:', err);
+    return null;
+  }
+}
+
+    async function render() {
+      const params   = new URLSearchParams(window.location.search);
+      const tipo     = params.get('tipo') || 'exatas';
+
+      const AREA_META = {
+        exatas:     { label: 'Área de Exatas',      title: 'Simulados de Matemática, Física e Química',       desc: 'Foco em performance para ENEM, ETEC e processos seletivos técnicos.',  areaFiltro: 'Exatas'     },
+        humanas:    { label: 'Área de Humanas',      title: 'Simulados de Português, História e Geografia',    desc: 'Leitura crítica e raciocínio aplicado para grandes vestibulares.',     areaFiltro: 'Humanas'    },
+        biologicas: { label: 'Área de Biológicas',   title: 'Simulados de Biologia e Ciências da Natureza',   desc: 'Prática em fenômenos naturais e análise científica.',                  areaFiltro: 'Biológicas' },
+        tecnicos:   { label: 'Área de Técnicos',     title: 'Simulados para Cursos e Formação Técnica',       desc: 'Preparação específica para o mercado e escolas técnicas.',             areaFiltro: 'Técnicos'   }
+      };
+
+      const meta = AREA_META[tipo] || AREA_META.exatas;
+
+      document.getElementById('area-label').textContent = meta.label;
+      document.getElementById('area-title').textContent = meta.title;
+      document.getElementById('area-desc').textContent  = meta.desc;
+      document.title = `SimuladoTop — ${meta.label}`;
+
+      const grid = document.getElementById('provas-grid');
+      grid.innerHTML = '<p style="color:#888;padding:20px 0">Carregando provas...</p>';
+
+      // 1. Tenta Supabase primeiro
+      const provasSupabase = await buscarProvasSupabase(meta.areaFiltro);
+
+        if (provasSupabase && provasSupabase.length > 0) {
+        grid.innerHTML = provasSupabase.map(p => {
+          const materia = p.materia ? ` · ${p.materia}` : '';
+          const areaSlug = encodeURIComponent((p.area || 'geral').toLowerCase());
+          const provaSlug = encodeURIComponent(p.slug || p.id);
+          return `
+            <div class="category-card category-card--${tipo}">
+              <span class="category-mark">${p.materia || p.area}</span>
+              <span class="category-icon">📋</span>
+              <h3>
+                <a href="simulado.html?area=${areaSlug}&prova=${provaSlug}"
+                   class="main-link">${p.title}</a>
+              </h3>
+              <p>${p.area}${materia}</p>
+              <div class="category-footer">
+                <a class="category-chip"
+                   href="simulado.html?area=${areaSlug}&prova=${provaSlug}">
+                  Iniciar Simulado
+                </a>
+              </div>
+            </div>
+          `;
+        }).join('');
+        return;
+      }
+
+      // 2. Fallback: tenta JSON local com verificação de existência
+      try {
+        const res = await fetch(`data/${tipo}_provas.json`);
+        if (!res.ok) throw new Error('JSON local não encontrado');
+        const provas = await res.json();
+
+        if (!provas.length) {
+          grid.innerHTML = `
+            <div style="padding:60px 20px;text-align:center;grid-column:1/-1">
+              <p style="font-size:2rem;margin-bottom:12px">📚</p>
+              <p style="color:#f0f0f0;font-weight:600;margin-bottom:8px">
+                Nossos professores ainda estão preparando esta área
+              </p>
+              <p style="color:#888;font-size:0.875rem">
+                Em breve novas provas estarão disponíveis aqui.
+              </p>
+            </div>`;
+          return;
+        }
+
+        // Verifica quais arquivos existem antes de mostrar
+        const provasComVerificacao = await Promise.all(
+          provas.map(async (p) => {
+            const jsonPath = `data/${tipo}/${p.slug}.json`;
+            try {
+              const check = await fetch(jsonPath, { method: 'HEAD' });
+              return { ...p, disponivel: check.ok, jsonPath };
+            } catch {
+              return { ...p, disponivel: false, jsonPath };
+            }
+          })
+        );
+
+        const cards = provasComVerificacao.map(p => {
+          if (p.disponivel) {
+            // Card normal com link
+            return `
+              <div class="category-card category-card--${tipo}">
+                <span class="category-mark">${p.dificuldade || 'Simulado'}</span>
+                <span class="category-icon">📐</span>
+                <h3>
+                  <a href="simulado.html?prova=${encodeURIComponent(p.jsonPath)}"
+                     class="main-link">${p.titulo}</a>
+                </h3>
+                <p>
+                  ${p.questoes_total ? p.questoes_total + ' questões' : ''}
+                  ${p.tempo_minutos ? '· ~' + p.tempo_minutos + ' min' : ''}
+                </p>
+                <div class="category-footer">
+                  <a class="category-chip"
+                     href="simulado.html?prova=${encodeURIComponent(p.jsonPath)}">
+                    Iniciar Simulado
+                  </a>
+                </div>
+              </div>
+            `;
+          } else {
+            // Card indisponível — sem link
+            return `
+              <div class="category-card category-card--${tipo}"
+                   style="opacity:0.6;cursor:default;">
+                <span class="category-mark" style="background:rgba(160,160,160,0.15);color:#888;">
+                  Em breve
+                </span>
+                <span class="category-icon">🔒</span>
+                <h3 style="color:#888">${p.titulo}</h3>
+                <p style="color:#555;font-size:0.8rem">
+                  Nossos professores ainda estão preparando este conteúdo.
+                </p>
+                <div class="category-footer">
+                  <span style="
+                    display:inline-block;
+                    padding:6px 14px;
+                    border-radius:999px;
+                    font-size:0.78rem;
+                    font-weight:600;
+                    background:rgba(160,160,160,0.1);
+                    color:#666;
+                    cursor:not-allowed;
+                  ">
+                    🔒 Indisponível
+                  </span>
+                </div>
+              </div>
+            `;
+          }
+        });
+
+        // Se NENHUM card estiver disponível
+        const algumDisponivel = provasComVerificacao.some(p => p.disponivel);
+        if (!algumDisponivel) {
+          grid.innerHTML = `
+            <div style="padding:60px 20px;text-align:center;grid-column:1/-1">
+              <p style="font-size:2rem;margin-bottom:12px">📚</p>
+              <p style="color:#f0f0f0;font-weight:600;margin-bottom:8px">
+                Nossos professores ainda estão preparando esta área
+              </p>
+              <p style="color:#888;font-size:0.875rem">
+                Em breve novas provas estarão disponíveis aqui.
+              </p>
+            </div>
+            ${cards.join('')}
+          `;
+          return;
+        }
+
+        grid.innerHTML = cards.join('');
+
+      } catch (err) {
+        grid.innerHTML = `
+          <div style="padding:60px 20px;text-align:center;grid-column:1/-1">
+            <p style="font-size:2rem;margin-bottom:12px">📚</p>
+            <p style="color:#f0f0f0;font-weight:600;margin-bottom:8px">
+              Nossos professores ainda estão preparando esta área
+            </p>
+            <p style="color:#888;font-size:0.875rem">
+              Em breve novas provas estarão disponíveis aqui.
+            </p>
+          </div>`;
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', render);
+  </script>
+</body>
+</html>
+
+

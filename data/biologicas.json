@@ -1,0 +1,11 @@
+{
+  "titulo": "Simulado de Ciências Biológicas",
+  "questoes": [
+    {
+      "id": 1,
+      "enunciado": "Qual organela é responsável pela respiração celular?",
+      "alternativas": ["Ribossomo", "Lisossomo", "Mitocôndria", "Complexo de Golgi", "Retículo Endoplasmático"],
+      "gabarito": 2
+    }
+  ]
+}

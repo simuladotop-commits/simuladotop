@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog | SimuladoTop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/auth-check.js" defer></script>
+</head>
+<body>
+<header class="home-header">
+  <div class="header-inner">
+    <a class="logo" href="index.html">Simulado<span>Top</span></a>
+    <div class="header-nav">
+      <a href="index.html">Início</a>
+      <a href="ranking.html">Ranking</a>
+      <a href="blog.html">Blog</a>
+      <div id="auth-container" class="auth-actions" aria-label="Ações de autenticação"></div>
+    </div>
+  </div>
+</header>
+
+<main class="site-wrap">
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <h1>Blog do SimuladoTop</h1>
+        <p>Confira os últimos conteúdos para estudar melhor, com dicas, redações e atualizações para vestibulares e concursos.</p>
+      </div>
+    </div>
+
+    <div id="blog-list" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:24px;"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-container">
+    <div class="footer-brand">
+      <span class="logo-text">Simulado<span class="logo-highlight">Top</span></span>
+    </div>
+    <div class="footer-nav">
+      <a href="sobre.html">Sobre</a>
+      <a href="privacidade.html">Privacidade</a>
+      <a href="termos.html">Termos de Uso</a>
+    </div>
+    <hr class="footer-line">
+    <div class="footer-info">
+      <p class="footer-text">Este site não possui vínculo com as instituições organizadoras dos concursos e vestibulares citados. As questões são baseadas em provas anteriores de domínio público.</p>
+      <p class="footer-text">© 2026 SimuladoTop — Todos os direitos reservados.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+<script type="module">
+  const blogList = document.getElementById('blog-list');
+
+  function escapeHtml(value) {
+    return String(value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function formatDate(value) {
+    if (!value) return '—';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '—';
+    return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+
+  async function loadBlogPosts() {
+    if (!window._supabase) {
+      console.warn('Supabase não inicializado');
+      return;
+    }
+
+    const { data, error } = await window._supabase
+      .from('posts')
+      .select('*')
+      .eq('status', 'publicado')
+      .order('criado_em', { ascending: false });
+
+    if (error) {
+      console.error('Erro ao carregar posts do blog:', error);
+      blogList.innerHTML = '<p class="empty-state">Não foi possível carregar os posts.</p>';
+      return;
+    }
+
+    const posts = Array.isArray(data) ? data : [];
+    if (posts.length === 0) {
+      blogList.innerHTML = '<div class="empty-state">Nenhum post publicado no momento.</div>';
+      return;
+    }
+
+    blogList.innerHTML = posts.map((post) => `
+      <article style="background:#1a1a1a;border:1px solid #2a2a2e;border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:16px;">
+        <span style="color:var(--accent);font-weight:700;font-size:.9rem;">${escapeHtml(post.categoria || 'Geral')}</span>
+        <h2 style="margin:0;font-size:1.4rem;color:#f8fafc;">${escapeHtml(post.titulo || 'Sem título')}</h2>
+        <p style="color:#cbd5e1;line-height:1.6;min-height:72px;">${escapeHtml(post.resumo || 'Sem resumo disponível.')}</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+          <span style="color:#94a3b8;font-size:.9rem;">${formatDate(post.criado_em)}</span>
+          <a href="blog-post.html?slug=${encodeURIComponent(post.slug || '')}" class="btn-top-secondary">Ler post</a>
+        </div>
+      </article>
+    `).join('');
+  }
+
+  loadBlogPosts();
+</script>
+</body>
+</html>

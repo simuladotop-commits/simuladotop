@@ -1,0 +1,215 @@
+{
+  "titulo": "Simulado: História do Brasil e Geral",
+  "questoes": [
+    {
+      "id": 1,
+      "enunciado": "Quem foi o primeiro presidente do Brasil?",
+      "alternativas": ["Deodoro da Fonseca", "Floriano Peixoto", "Prudente de Morais", "Getúlio Vargas", "Dom Pedro II"],
+      "gabarito": 0,
+      "explicacao": "O Marechal Deodoro da Fonseca foi o líder do movimento que proclamou a República em 15 de novembro de 1889 e tornou-se o primeiro presidente do Brasil."
+    },
+    {
+      "id": 2,
+      "enunciado": "A Revolução Francesa teve início em que ano?",
+      "alternativas": ["1789", "1776", "1804", "1815", "1750"],
+      "gabarito": 0,
+      "explicacao": "A Revolução Francesa começou em 1789 com a queda da Bastilha, marcando o fim do absolutismo na França."
+    },
+    {
+      "id": 3,
+      "enunciado": "O período conhecido como 'Estado Novo' no Brasil foi liderado por:",
+      "alternativas": ["Getúlio Vargas", "Juscelino Kubitschek", "João Goulart", "Castelo Branco", "Tancredo Neves"],
+      "gabarito": 0,
+      "explicacao": "O Estado Novo (1937-1945) foi a fase ditatorial da Era Vargas, iniciada com o golpe de 1937."
+    },
+    {
+      "id": 4,
+      "enunciado": "Qual civilização antiga construiu as pirâmides de Gizé?",
+      "alternativas": ["Egípcia", "Maia", "Inca", "Romana", "Grega"],
+      "gabarito": 0,
+      "explicacao": "As pirâmides de Gizé foram construídas pelos antigos egípcios como túmulos para os faraós."
+    },
+    {
+      "id": 5,
+      "enunciado": "O Tratado de Tordesilhas (1494) dividiu as terras descobertas entre:",
+      "alternativas": ["Portugal e Espanha", "Inglaterra e França", "Espanha e Holanda", "Portugal e Inglaterra", "França e Portugal"],
+      "gabarito": 0,
+      "explicacao": "O Tratado de Tordesilhas dividiu o 'Novo Mundo' entre Portugal e Espanha através de um meridiano."
+    },
+    {
+      "id": 6,
+      "enunciado": "Quem escreveu 'A República'?",
+      "alternativas": ["Platão", "Aristóteles", "Sócrates", "Maquiavel", "Rousseau"],
+      "gabarito": 0,
+      "explicacao": "Platão é o autor de 'A República', uma das obras mais influentes da filosofia política."
+    },
+    {
+      "id": 7,
+      "enunciado": "A queda do Muro de Berlim ocorreu em:",
+      "alternativas": ["1989", "1991", "1985", "1979", "1995"],
+      "gabarito": 0,
+      "explicacao": "O muro de Berlim caiu em 9 de novembro de 1989, simbolizando o fim da Guerra Fria."
+    },
+    {
+      "id": 8,
+      "enunciado": "Qual era o principal objetivo das Cruzadas?",
+      "alternativas": ["Retomar a Terra Santa", "Descobrir novas rotas comerciais", "Expandir o império romano", "Combater a peste negra", "Fundar novas universidades"],
+      "gabarito": 0,
+      "explicacao": "As Cruzadas foram expedições militares cristãs que visavam retomar Jerusalém e a Terra Santa do domínio muçulmano."
+    },
+    {
+      "id": 9,
+      "enunciado": "O Iluminismo foi um movimento intelectual do século:",
+      "alternativas": ["XVIII", "XVI", "XVII", "XIX", "XV"],
+      "gabarito": 0,
+      "explicacao": "O Iluminismo, ou Século das Luzes, teve seu auge no século XVIII, defendendo a razão e a liberdade."
+    },
+    {
+      "id": 10,
+      "enunciado": "A abolição da escravidão no Brasil ocorreu em 1888 através da:",
+      "alternativas": ["Lei Áurea", "Lei Ventre Livre", "Lei dos Sexagenários", "Lei Eusébio de Queirós", "Lei de Terras"],
+      "gabarito": 0,
+      "explicacao": "A Princesa Isabel assinou a Lei Áurea em 13 de maio de 1888, extinguindo a escravidão no Brasil."
+    },
+    {
+      "id": 11,
+      "enunciado": "Quem foi o líder da Revolução Russa de 1917?",
+      "alternativas": ["Lenin", "Stalin", "Trotsky", "Nicolau II", "Gorbachev"],
+      "gabarito": 0,
+      "explicacao": "Vladimir Lenin foi o principal líder bolchevique e o primeiro governante da Rússia Soviética."
+    },
+    {
+      "id": 12,
+      "enunciado": "A Primeira Guerra Mundial teve início em:",
+      "alternativas": ["1914", "1912", "1918", "1939", "1905"],
+      "gabarito": 0,
+      "explicacao": "A Primeira Guerra Mundial começou em 1914, após o assassinato do arquiduque Francisco Ferdinando."
+    },
+    {
+      "id": 13,
+      "enunciado": "O Descobrimento do Brasil por Cabral ocorreu em:",
+      "alternativas": ["22 de abril de 1500", "15 de novembro de 1889", "7 de setembro de 1822", "1 de maio de 1500", "25 de dezembro de 1499"],
+      "gabarito": 0,
+      "explicacao": "Pedro Álvares Cabral chegou ao litoral brasileiro em 22 de abril de 1500."
+    },
+    {
+      "id": 14,
+      "enunciado": "Qual país foi o principal adversário dos Estados Unidos na Guerra Fria?",
+      "alternativas": ["União Soviética", "China", "Alemanha", "Japão", "Vietnã"],
+      "gabarito": 0,
+      "explicacao": "A Guerra Fria foi uma disputa ideológica e geopolítica entre os EUA e a União Soviética (URSS)."
+    },
+    {
+      "id": 15,
+      "enunciado": "O Renascimento teve sua origem na:",
+      "alternativas": ["Itália", "França", "Espanha", "Inglaterra", "Grécia"],
+      "gabarito": 0,
+      "explicacao": "O Renascimento cultural e artístico começou nas cidades italianas, como Florença, no século XIV."
+    },
+    {
+      "id": 16,
+      "enunciado": "A Independência do Brasil foi proclamada por:",
+      "alternativas": ["Dom Pedro I", "Dom Pedro II", "José Bonifácio", "Tiradentes", "Bento Gonçalves"],
+      "gabarito": 0,
+      "explicacao": "Dom Pedro I proclamou a independência às margens do riacho Ipiranga em 7 de setembro de 1822."
+    },
+    {
+      "id": 17,
+      "enunciado": "Qual imperador romano legalizou o cristianismo?",
+      "alternativas": ["Constantino", "Nero", "Júlio César", "Augusto", "Calígula"],
+      "gabarito": 0,
+      "explicacao": "Constantino I promulgou o Édito de Milão em 313, garantindo liberdade religiosa aos cristãos."
+    },
+    {
+      "id": 18,
+      "enunciado": "A Guerra dos Cem Anos foi um conflito entre:",
+      "alternativas": ["França e Inglaterra", "Espanha e Portugal", "Alemanha e Áustria", "Roma e Cartago", "Grécia e Pérsia"],
+      "gabarito": 0,
+      "explicacao": "A Guerra dos Cem Anos (1337-1453) foi uma série de conflitos entre as coroas da França e da Inglaterra."
+    },
+    {
+      "id": 19,
+      "enunciado": "Quem descobriu o caminho marítimo para as Índias em 1498?",
+      "alternativas": ["Vasco da Gama", "Cristóvão Colombo", "Fernão de Magalhães", "Bartolomeu Dias", "Américo Vespúcio"],
+      "gabarito": 0,
+      "explicacao": "Vasco da Gama foi o navegador português que completou a primeira viagem marítima da Europa para a Índia."
+    },
+    {
+      "id": 20,
+      "enunciado": "O Plano Real foi implementado no governo de:",
+      "alternativas": ["Itamar Franco", "Fernando Collor", "José Sarney", "Fernando Henrique Cardoso", "Lula"],
+      "gabarito": 0,
+      "explicacao": "O Plano Real foi lançado em 1994, durante o governo de Itamar Franco, sob a liderança do ministro FHC."
+    },
+    {
+      "id": 21,
+      "enunciado": "Qual cidade grega é considerada o berço da democracia?",
+      "alternativas": ["Atenas", "Esparta", "Corinto", "Tebas", "Olímpia"],
+      "gabarito": 0,
+      "explicacao": "Atenas desenvolveu o primeiro sistema democrático conhecido na Antiguidade Clássica."
+    },
+    {
+      "id": 22,
+      "enunciado": "O Apartheid foi um regime de segregação racial na:",
+      "alternativas": ["África do Sul", "Angola", "Moçambique", "Nigéria", "Etiópia"],
+      "gabarito": 0,
+      "explicacao": "O Apartheid vigorou na África do Sul entre 1948 e 1994, separando negros e brancos."
+    },
+    {
+      "id": 23,
+      "enunciado": "Quem foi a principal líder feminina na luta pelo voto no Reino Unido?",
+      "alternativas": ["Emmeline Pankhurst", "Margaret Thatcher", "Rainha Vitória", "Virginia Woolf", "Florence Nightingale"],
+      "gabarito": 0,
+      "explicacao": "Emmeline Pankhurst foi a fundadora do movimento das sufragistas britânicas."
+    },
+    {
+      "id": 24,
+      "enunciado": "A Segunda Guerra Mundial terminou em:",
+      "alternativas": ["1945", "1942", "1950", "1939", "1918"],
+      "gabarito": 0,
+      "explicacao": "A Segunda Guerra Mundial encerrou-se em 1945 com a rendição da Alemanha e do Japão."
+    },
+    {
+      "id": 25,
+      "enunciado": "O 'Direito Divino dos Reis' era uma justificativa para o:",
+      "alternativas": ["Absolutismo", "Liberalismo", "Socialismo", "Feudalismo", "Anarquismo"],
+      "gabarito": 0,
+      "explicacao": "O absolutismo monárquico baseava-se na ideia de que o poder do rei emanava diretamente de Deus."
+    },
+    {
+      "id": 26,
+      "enunciado": "A Inconfidência Mineira teve como principal mártir:",
+      "alternativas": ["Tiradentes", "Cláudio Manuel da Costa", "Tomás Antônio Gonzaga", "Aleijadinho", "Bárbara Heliodora"],
+      "gabarito": 0,
+      "explicacao": "Joaquim José da Silva Xavier, o Tiradentes, foi o único condenado à morte no movimento mineiro."
+    },
+    {
+      "id": 27,
+      "enunciado": "Qual tratado encerrou formalmente a Primeira Guerra Mundial?",
+      "alternativas": ["Tratado de Versalhes", "Tratado de Trianon", "Tratado de Utrecht", "Paz de Vestfália", "Tratado de Madri"],
+      "gabarito": 0,
+      "explicacao": "O Tratado de Versalhes (1919) impôs duras condições à Alemanha após a Primeira Guerra."
+    },
+    {
+      "id": 28,
+      "enunciado": "O período da 'Ditadura Militar' no Brasil durou de:",
+      "alternativas": ["1964 a 1985", "1930 a 1945", "1954 a 1964", "1985 a 2002", "1960 a 1980"],
+      "gabarito": 0,
+      "explicacao": "O regime militar brasileiro estendeu-se de 31 de março de 1964 até a posse de José Sarney em 1985."
+    },
+    {
+      "id": 29,
+      "enunciado": "A Magna Carta (1215) limitou o poder do rei na:",
+      "alternativas": ["Inglaterra", "França", "Alemanha", "Escócia", "Irlanda"],
+      "gabarito": 0,
+      "explicacao": "A Magna Carta foi imposta ao Rei João Sem-Terra pelos barões ingleses para limitar o poder monárquico."
+    },
+    {
+      "id": 30,
+      "enunciado": "Quem foi o principal ideólogo do Socialismo Científico?",
+      "alternativas": ["Karl Marx", "Adam Smith", "John Locke", "Thomas Hobbes", "Jean-Jacques Rousseau"],
+      "gabarito": 0,
+      "explicacao": "Karl Marx, junto com Friedrich Engels, desenvolveu as bases do socialismo científico e do comunismo."
+    }
+  ]
+}

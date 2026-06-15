@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SimuladoTop — Estudo Ativo para Vestibulares</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  
+  <!-- ═══ AUTENTICAÇÃO - Carregado no head com defer para execução imediata ═══ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/auth-check.js" defer></script>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="home-header">
+  <div class="header-inner">
+    <a class="logo" href="index.html">Simulado<span>Top</span></a>
+    <div class="header-nav">
+      <a href="index.html">Início</a>
+      <a href="ranking.html">Ranking</a>
+      <a href="blog.html">Blog</a>
+      <div id="auth-container" class="auth-actions" aria-label="Ações de autenticação"></div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ CONTEÚDO CENTRAL ═══ -->
+<div class="site-wrap">
+
+  <!-- HERO 2 COLUNAS -->
+  <div class="hero-grid">
+
+    <!-- COLUNA ESQUERDA -->
+    <div class="col-left">
+      <div class="hero-eyebrow">
+        <div class="hero-logo">🎯</div>
+        <span>100% gratuito · sem cadastro · gabarito comentado</span>
+      </div>
+      <h1>
+        Simulados para
+        <em>Vestibulares</em>
+        <em>e Técnicos</em>
+      </h1>
+      <p>Treine por área, acompanhe seu desempenho e avance com conteúdos pensados para ENEM, ETEC e vestibulinhos técnicos.</p>
+      <div class="hero-btns">
+        <a href="#categorias" class="btn-top-primary">📚 Explorar áreas</a>
+        <a href="#ranking" class="btn-top-secondary">🏆 Ver ranking</a>
+      </div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-num">10+</div><div class="stat-label">Simulados</div></div>
+        <div class="stat-box"><div class="stat-num">100+</div><div class="stat-label">Questões</div></div>
+        <div class="stat-box"><div class="stat-num">4</div><div class="stat-label">Categorias</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-cadastros">0</div><div class="stat-label">Cadastros</div></div>
+      </div>
+    </div>
+
+    <!-- COLUNA DIREITA — RANKING -->
+    <div class="col-right" id="ranking">
+      <div class="ranking-card">
+        <div class="ranking-header">
+          <div class="ranking-title">🏆 Ranking da Semana</div>
+          <span class="ranking-badge">Esta semana</span>
+        </div>
+        <div id="ranking-list">
+          <!-- Gerado dinamicamente -->
+          <div class="rk-row"><p style="font-size:.8rem;color:var(--muted);text-align:center;width:100%;">Carregando ranking...</p></div>
+        </div>
+        <div class="rk-footer">🔒 Faça login para aparecer no ranking</div>
+      </div>
+    </div>
+
+  </div><!-- fim hero-grid -->
+
+  <hr class="divider" />
+
+  <!-- CATEGORIAS -->
+  <section class="section" id="categorias">
+    <div class="section-head">
+      <h2>Escolha por área</h2>
+      <p>Navegue por quatro trilhas que cobrem vestibulares e formação técnica.</p>
+    </div>
+    <div class="category-grid">
+      <!-- CARD EXATAS -->
+      <div class="category-card category-card--exatas">
+        <span class="category-mark">Exatas</span>
+        <span class="category-icon">🧮</span>
+        <h3><a href="area.html?tipo=exatas" class="main-link">Exatas</a></h3>
+        <p>Matemática, física e química para quem quer ganhar performance em ENEM, ETEC e processos seletivos técnicos.</p>
+        <div class="category-footer">
+          <a class="category-chip" href="area.html?tipo=exatas">Matemática</a>
+          <a class="category-chip" href="area.html?tipo=exatas">Física</a>
+          <a class="category-chip" href="area.html?tipo=exatas">Química</a>
+        </div>
+      </div>
+
+      <!-- CARD HUMANAS -->
+      <div class="category-card category-card--humanas">
+        <span class="category-mark">Humanas</span>
+        <span class="category-icon">📖</span>
+        <h3><a href="area.html?tipo=humanas" class="main-link">Humanas</a></h3>
+        <p>Português, interpretação, história e geografia com foco em leitura crítica e raciocínio aplicado.</p>
+        <div class="category-footer">
+          <a class="category-chip" href="area.html?tipo=humanas">Português</a>
+          <a class="category-chip" href="area.html?tipo=humanas">História</a>
+          <a class="category-chip" href="area.html?tipo=humanas">Geografia</a>
+        </div>
+      </div>
+
+      <!-- CARD BIOLOGICAS -->
+      <div class="category-card category-card--biologicas">
+        <span class="category-mark">Biológicas</span>
+        <span class="category-icon">🧬</span>
+        <h3><a href="area.html?tipo=biologicas" class="main-link">Biológicas</a></h3>
+        <p>Conteúdos de ciências da natureza com prática em biologia, química e análise de fenômenos naturais.</p>
+        <div class="category-footer">
+          <a class="category-chip" href="area.html?tipo=biologicas">Biologia</a>
+          <a class="category-chip" href="area.html?tipo=biologicas">Química</a>
+          <a class="category-chip" href="area.html?tipo=biologicas">Ciências</a>
+        </div>
+      </div>
+
+      <!-- CARD TECNICOS -->
+      <div class="category-card category-card--tecnicos">
+        <span class="category-mark">Técnicos</span>
+        <span class="category-icon">💼</span>
+        <h3><a href="area.html?tipo=tecnicos" class="main-link">Técnicos</a></h3>
+        <p>Simulados práticos para vestibulinho ETEC e preparação para cursos técnicos e áreas profissionais.</p>
+        <div class="category-footer">
+          <a class="category-chip" href="area.html?tipo=tecnicos">ETEC</a>
+          <a class="category-chip" href="area.html?tipo=tecnicos">Profissionalizante</a>
+          <a class="category-chip" href="area.html?tipo=tecnicos">Prática</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- COMO FUNCIONA -->
+  <section class="section" id="como-funciona">
+    <div class="section-head"><h2>Como funciona</h2></div>
+    <div class="how-grid">
+      <div class="how-item">
+        <div class="how-num">01</div>
+        <div class="how-title">Escolha a área</div>
+        <div class="how-desc">Selecione a trilha que você quer treinar no momento: Exatas, Humanas, Biológicas ou Técnicos.</div>
+      </div>
+      <div class="how-item">
+        <div class="how-num">02</div>
+        <div class="how-title">Responda as questões</div>
+        <div class="how-desc">Gabarito comentado logo após cada resposta — você entende o erro na hora, não só depois.</div>
+      </div>
+      <div class="how-item">
+        <div class="how-num">03</div>
+        <div class="how-title">Veja seu resultado</div>
+        <div class="how-desc">Resultado detalhado por disciplina, gabarito completo e recomendações de estudo personalizadas.</div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- fim site-wrap -->
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-container">
+    <div class="footer-brand">
+      <span class="logo-text">Simulado<span class="logo-highlight">Top</span></span>
+    </div>
+
+    <div class="footer-nav">
+      <a href="sobre.html">Sobre</a>
+      <a href="privacidade.html">Privacidade</a>
+      <a href="termos.html">Termos de Uso</a>
+    </div>
+
+    <hr class="footer-line">
+
+    <div class="footer-info">
+      <p class="footer-text">Este site não possui vínculo com as instituições organizadoras dos concursos e vestibulares citados. As questões são baseadas em provas anteriores de domínio público.</p>
+      <p class="footer-text">© 2026 SimuladoTop — Todos os direitos reservados.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Script.js carregado no final para não bloquear rendering -->
+<script src="js/script.js"></script>
+</body>
+</html>
+
+

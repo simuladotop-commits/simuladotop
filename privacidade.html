@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Política de Privacidade | SimuladoTop</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  
+  <!-- ═══ AUTENTICAÇÃO - Carregado no head com defer ═══ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/auth-check.js" defer></script>
+  
+  <style>
+    .doc-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 28px 80px;
+    }
+    .doc-tag {
+      display: inline-block;
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      padding: 2px 8px;
+      margin-bottom: 16px;
+    }
+    .doc-title {
+      font-family: var(--font-head);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+    .doc-updated {
+      font-size: .8rem;
+      color: var(--muted);
+      margin-bottom: 36px;
+    }
+    .doc-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .doc-section h2 {
+      font-family: var(--font-head);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .doc-section p {
+      font-size: .92rem;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 10px;
+    }
+    .doc-section p:last-child { margin-bottom: 0; }
+    .doc-section ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .doc-section ul li {
+      font-size: .92rem;
+      color: var(--muted);
+      line-height: 1.6;
+      padding-left: 16px;
+      position: relative;
+    }
+    .doc-section ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: .8rem;
+    }
+    .doc-contact {
+      background: linear-gradient(135deg, #1a1400 0%, #0d0f14 100%);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-top: 24px;
+      font-size: .88rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .doc-contact strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <a class="logo" href="index.html">Simulado<span>Top</span></a>
+      <div class="header-nav">
+        <a href="index.html">Início</a>
+        <a href="ranking.html">Ranking</a>
+        <a href="blog.html">Blog</a>
+        <div id="auth-container" class="auth-actions" aria-label="Ações de autenticação"></div>
+      </div>
+    </div>
+  </header>
+
+<div class="doc-wrap">
+
+  <div class="doc-tag">Legal</div>
+  <h1 class="doc-title">Política de Privacidade</h1>
+  <p class="doc-updated">Última atualização: maio de 2026</p>
+
+  <div class="doc-section">
+    <h2>1. Quem somos</h2>
+    <p>O SimuladoTop é uma plataforma gratuita de simulados online para concursos públicos e vestibulares. Não somos afiliados, associados ou representantes oficiais de nenhuma banca examinadora, instituição pública ou organização citada em nosso site.</p>
+  </div>
+
+  <div class="doc-section">
+    <h2>2. Dados que coletamos</h2>
+    <p>Atualmente, o SimuladoTop não exige cadastro e não coleta dados pessoais identificáveis. Em versões futuras com sistema de login, poderemos coletar:</p>
+    <ul>
+      <li>Nome e endereço de e-mail (para criação de conta)</li>
+      <li>Dados de desempenho nos simulados (pontuação, tempo, acertos)</li>
+      <li>Dados de acesso gerados automaticamente (IP, navegador, sistema operacional)</li>
+    </ul>
+  </div>
+
+  <div class="doc-section">
+    <h2>3. Como usamos os dados</h2>
+    <p>Os dados coletados são utilizados exclusivamente para:</p>
+    <ul>
+      <li>Personalizar a experiência do usuário na plataforma</li>
+      <li>Exibir histórico de desempenho e ranking</li>
+      <li>Melhorar o conteúdo e a qualidade dos simulados</li>
+      <li>Enviar comunicações relacionadas à plataforma, se autorizado</li>
+    </ul>
+    <p>Não vendemos, alugamos ou compartilhamos seus dados pessoais com terceiros para fins comerciais.</p>
+  </div>
+
+  <div class="doc-section">
+    <h2>4. Cookies e rastreamento</h2>
+    <p>Utilizamos cookies de sessão para garantir o funcionamento correto da plataforma. Podemos utilizar ferramentas de análise (como Google Analytics) para entender o comportamento dos visitantes de forma agregada e anônima.</p>
+    <p>Em caso de exibição de anúncios via Google AdSense, o Google poderá utilizar cookies para personalizar anúncios. Você pode gerenciar suas preferências de cookies nas configurações do seu navegador.</p>
+  </div>
+
+  <div class="doc-section">
+    <h2>5. Links de afiliados</h2>
+    <p>Algumas páginas do SimuladoTop contêm links de afiliados para cursos preparatórios e materiais de estudo. Ao clicar nesses links e realizar uma compra, podemos receber uma comissão sem custo adicional para você. Todos os links de afiliado são identificados com o aviso "Link de afiliado".</p>
+  </div>
+
+  <div class="doc-section">
+    <h2>6. Seus direitos (LGPD)</h2>
+    <p>Conforme a Lei Geral de Proteção de Dados (Lei nº 13.709/2018), você tem direito a:</p>
+    <ul>
+      <li>Confirmar se tratamos seus dados pessoais</li>
+      <li>Acessar os dados que temos sobre você</li>
+      <li>Corrigir dados incompletos, inexatos ou desatualizados</li>
+      <li>Solicitar a exclusão dos seus dados pessoais</li>
+      <li>Revogar o consentimento a qualquer momento</li>
+    </ul>
+  </div>
+
+  <div class="doc-section">
+    <h2>7. Segurança</h2>
+    <p>Adotamos medidas técnicas e organizacionais adequadas para proteger seus dados contra acesso não autorizado, alteração, divulgação ou destruição. No entanto, nenhum sistema de transmissão pela internet é 100% seguro.</p>
+  </div>
+
+  <div class="doc-section">
+    <h2>8. Alterações nesta política</h2>
+    <p>Esta Política de Privacidade pode ser atualizada periodicamente. Recomendamos que você a revise regularmente. Mudanças significativas serão comunicadas de forma destacada na plataforma.</p>
+  </div>
+
+  <div class="doc-contact">
+    <strong>Dúvidas sobre privacidade?</strong><br>
+    Entre em contato pelo e-mail: <strong>contato@simuladotop.com.br</strong><br>
+    Respondemos em até 5 dias úteis.
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-container">
+    <div class="footer-brand">
+      <span class="logo-text">Simulado<span class="logo-highlight">Top</span></span>
+    </div>
+
+    <div class="footer-nav">
+      <a href="sobre.html">Sobre</a>
+      <a href="privacidade.html">Privacidade</a>
+      <a href="termos.html">Termos de Uso</a>
+    </div>
+
+    <hr class="footer-line">
+
+    <div class="footer-info">
+      <p class="footer-text">Este site não possui vínculo com as instituições organizadoras dos concursos e vestibulares citados. As questões são baseadas em provas anteriores de domínio público.</p>
+      <p class="footer-text">© 2026 SimuladoTop — Todos os direitos reservados.</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
+

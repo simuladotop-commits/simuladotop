@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Administrativo � SimuladoTop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/admin-theme.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/auth-check.js" defer></script>
+</head>
+<body class="admin-dashboard">
+  <header>
+    <div class="header-inner">
+      <a class="logo" href="index.html">Simulado<span>Top</span></a>
+      <div class="header-nav">
+        <a href="index.html">Inicio</a>
+        <a href="ranking.html">Ranking</a>
+        <a href="blog.html">Blog</a>
+        <div id="auth-container" class="auth-actions"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="admin-main" class="admin-main hide-before-auth">
+    <div id="admin-content" class="dashboard-loading-shell">
+      <div class="loading-panel">
+        <div class="skeleton-card short"></div>
+        <div class="skeleton-grid three-cols">
+          <div class="skeleton-card medium"></div>
+          <div class="skeleton-card medium"></div>
+          <div class="skeleton-card medium"></div>
+        </div>
+        <div class="skeleton-card tall"></div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { initAdminDashboard } from './js/admin-dashboard.js';
+
+    async function initializeAdminPage() {
+      try {
+        console.log('[admin] Iniciando sem guard...');
+
+        const adminMain = document.getElementById('admin-main');
+        if (adminMain) adminMain.classList.remove('hide-before-auth');
+
+        await initAdminDashboard();
+      } catch (err) {
+        console.error('[admin] Erro:', err);
+        document.getElementById('admin-content').innerHTML =
+          '<p style="color:red;padding:40px">Erro: ' + err.message + '</p>';
+      }
+    }
+
+    initializeAdminPage();
+  </script>
+</body>
+</html>
+
+

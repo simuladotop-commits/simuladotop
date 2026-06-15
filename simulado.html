@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulado — SimuladoTop</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- ═══ AUTENTICAÇÃO - Carregado no head com defer ═══ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/auth-check.js" defer></script>
+  
+  <style>
+    .simulado-container {
+      max-width: 900px; /* Alinhado com a largura da seção de cards da Home */
+      margin: 40px auto;
+      padding: 0 20px;
+      flex: 1;
+    }
+    
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+    }
+    .timer-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-head);
+      font-size: 1.2rem;
+      color: var(--accent);
+      background: var(--accent-glow);
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--accent);
+    }
+    .progress-container {
+      width: 100%;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      margin-bottom: 32px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .question-info {
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+    .question-text {
+      font-size: 1.25rem;
+      line-height: 1.6;
+      margin-bottom: 24px;
+      color: var(--text);
+    }
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .option-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: rgba(255,255,255,0.02);
+    }
+    .option-label:hover {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+    }
+    .option-label.selected {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+    .option-radio {
+      display: none;
+    }
+    .option-prefix {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-family: var(--font-head);
+      flex-shrink: 0;
+    }
+    .option-label.selected .option-prefix {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+    }
+    .nav-btns {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 32px;
+      gap: 12px;
+    }
+
+    /* Estilos para Estudo Ativo */
+    .feedback-box {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: var(--radius);
+      border-left: 4px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .feedback-box.correta { border-color: var(--correct); }
+    .feedback-box.errada { border-color: var(--wrong); }
+    
+    .feedback-title {
+      font-family: var(--font-head);
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+    .feedback-text {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+    
+    .option-label.correta { border-color: var(--correct); background: rgba(34, 197, 94, 0.1); }
+    .option-label.errada { border-color: var(--wrong); background: rgba(239, 68, 68, 0.1); }
+    .option-label.disabled { cursor: not-allowed; opacity: 0.7; }
+
+    /* Relatório Final */
+    .error-list {
+      text-align: left;
+      margin-top: 24px;
+      max-height: 300px;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+    .error-item {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    .error-item:last-child { border-bottom: none; }
+    .error-question { font-weight: 600; margin-bottom: 4px; display: block; }
+    .error-fix { color: var(--accent); cursor: pointer; font-size: 0.8rem; text-decoration: underline; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .result-panel {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin: 32px 0;
+      background: rgba(255,255,255,0.03);
+      padding: 24px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+    .result-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .result-icon {
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+    }
+    .result-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .result-value {
+      font-family: var(--font-head);
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+    .result-value.gold {
+      color: #FFD700;
+      font-size: 2.2rem;
+      text-shadow: 0 0 15px rgba(255,215,0,0.3);
+    }
+    .performance-bar-container {
+      width: 100%;
+      height: 12px;
+      background: var(--border);
+      border-radius: 6px;
+      margin: 24px 0 12px;
+      overflow: hidden;
+    }
+    .performance-bar {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 1s ease-out;
+    }
+    .performance-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .feedback-msg {
+      font-family: var(--font-head);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .feedback-msg.success { color: var(--correct); }
+    .feedback-msg.warning { color: var(--wrong); }
+
+    @media (max-width: 600px) {
+      .result-panel { grid-template-columns: 1fr; gap: 24px; }
+      .nav-btns { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="index.html">Simulado<span>Top</span></a>
+    <div class="header-nav">
+      <a href="index.html">Início</a>
+      <a href="ranking.html">Ranking</a>
+        <a href="blog.html">Blog</a>
+        <div id="auth-container" class="auth-actions" aria-label="Ações de autenticação"></div>
+    </div>
+  </div>
+</header>
+
+<main class="simulado-container">
+  <section id="intro-section" style="display:block;max-width:900px;margin:40px auto;padding:0 20px;">
+    <div class="quiz-intro">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+        <div>
+          <div id="tag-label" style="font-weight:700;color:var(--accent);margin-bottom:6px">Simulado</div>
+          <h2 id="simulator-title" style="font-family:var(--font-head);margin:0">Carregando...</h2>
+          <p id="intro-desc" style="color:var(--muted);margin-top:8px">Detalhes da prova</p>
+        </div>
+        <div style="text-align:right">
+          <div id="meta-tempo" style="font-weight:600;color:var(--accent);margin-bottom:6px">~-- min</div>
+          <div id="meta-questoes" style="color:var(--muted)">-- questões</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:18px">
+        <button id="btn-iniciar" class="btn-top-primary" style="display:none">Iniciar Simulado</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="quiz-section" style="display:none">
+    <div id="quiz-screen">
+    <div class="quiz-header">
+      <h2 id="quiz-titulo" style="font-family: var(--font-head);">Carregando...</h2>
+      <div class="timer-box">
+        <span>⏱️</span>
+        <span id="timer">00:00</span>
+      </div>
+    </div>
+
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="card-top">
+      <div class="question-info" id="question-number"></div>
+      <div id="q-counter" style="display:none"></div>
+      <div id="question-text" class="question-text"></div>
+      <div class="options-group" id="options-group">
+        <!-- Alternativas injetadas via JS -->
+      </div>
+
+      <div id="feedback-box" class="feedback-box">
+        <div id="feedback-title" class="feedback-title"></div>
+        <div id="feedback-text" class="feedback-text"></div>
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn-top-secondary" id="btn-prev" disabled>Anterior</button>
+        <button class="btn-top-primary" id="btn-next" style="display: none;">Próxima Questão</button>
+        <button class="btn-top-primary" id="btn-finish" style="display: none;">Ver Relatório Final</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div id="resultado-final" class="card-top" style="display: none;">
+    <div id="feedback-message" class="feedback-msg">Simulado Concluído!</div>
+    <p style="color: var(--muted); margin-bottom: 8px;">Confira seu desempenho detalhado.</p>
+    
+    <div class="performance-bar-container">
+      <div id="performance-bar" class="performance-bar"></div>
+    </div>
+    <div id="performance-percentage" class="performance-text">0% de aproveitamento</div>
+
+    <div class="result-panel">
+      <div class="result-col">
+        <span class="result-icon">✅</span>
+        <span class="result-label">Acertos</span>
+        <span id="total-hits" class="result-value" style="color: var(--correct);">0</span>
+      </div>
+      <div class="result-col">
+        <span class="result-icon">⏱️</span>
+        <span class="result-label">Tempo</span>
+        <span id="time-used" class="result-value">00:00</span>
+      </div>
+    </div>
+
+    <div id="error-report" class="error-list" style="display: none;">
+      <h3 style="font-family: var(--font-head); font-size: 1.2rem; margin-bottom: 12px;">Questões para Revisar:</h3>
+      <div id="error-items-container"></div>
+    </div>
+
+    <div style="display: flex; gap: 12px; justify-content: center; margin-top: 32px; flex-wrap: wrap;">
+      <a href="index.html" class="btn-top-secondary">Voltar ao Início</a>
+      <button id="btn-baixar-img" class="btn-top-primary" onclick="compartilharResultado('baixar')">
+        💾 Baixar Imagem
+      </button>
+      <button id="btn-whatsapp" class="btn-top-secondary" onclick="compartilharResultado('whatsapp')">
+        💬 Compartilhar no WhatsApp
+      </button>
+      <div id="save-feedback" style="text-align:center;margin-top:16px"></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-container">
+    <div class="footer-brand">
+      <span class="logo-text">Simulado<span class="logo-highlight">Top</span></span>
+    </div>
+
+    <div class="footer-nav">
+      <a href="sobre.html">Sobre</a>
+      <a href="privacidade.html">Privacidade</a>
+      <a href="termos.html">Termos de Uso</a>
+    </div>
+
+    <hr class="footer-line">
+
+    <div class="footer-info">
+      <p class="footer-text">Este site não possui vínculo com as instituições organizadoras dos concursos e vestibulares citados. As questões são baseadas em provas anteriores de domínio público.</p>
+      <p class="footer-text">© 2026 SimuladoTop — Todos os direitos reservados.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+async function compartilharResultado(modo = 'baixar') {
+  const pctRaw = document.getElementById('performance-percentage')?.textContent || '0%';
+  const pct = pctRaw.replace('de aproveitamento', '').replace('% ', '%').trim();
+  const titulo = document.getElementById('simulator-title')?.textContent || 'Simulado';
+  const acertos = document.getElementById('total-hits')?.textContent || '0';
+  const tempo  = document.getElementById('time-used')?.textContent || '00:00';
+
+  const canvas = document.createElement('canvas');
+  canvas.width  = 1080;
+  canvas.height = 1080;
+  const ctx = canvas.getContext('2d');
+
+  const pctNum = parseInt(pct);
+  const corPct = pctNum >= 70 ? '#22c55e' : pctNum >= 50 ? '#f5a623' : '#ef4444';
+  const frase  = pctNum >= 70 ? 'Excelente resultado!' : pctNum >= 50 ? 'Bom desempenho!' : 'Continue praticando!';
+
+  // FUNDO
+  ctx.fillStyle = '#111111';
+  ctx.fillRect(0, 0, 1080, 1080);
+
+  // FAIXA TOPO
+  ctx.fillStyle = '#f5a623';
+  ctx.fillRect(0, 0, 1080, 100);
+  ctx.font = 'bold 54px Arial';
+  ctx.fillStyle = '#111111';
+  ctx.textAlign = 'center';
+  ctx.fillText('SimuladoTop', 540, 68);
+
+  // BORDA
+  ctx.strokeStyle = '#f5a623';
+  ctx.lineWidth = 5;
+  ctx.strokeRect(15, 15, 1050, 1050);
+
+  // Troféu PNG
+  await new Promise((resolve) => {
+    const trophy = new Image();
+    trophy.onload = () => {
+      ctx.drawImage(trophy, 415, 110, 200, 200);
+      resolve();
+    };
+    trophy.onerror = resolve;
+    trophy.src = 'img/trophy.png';
+  });
+
+  // SIMULADO CONCLUIDO
+  ctx.font = '30px Arial';
+  ctx.fillStyle = '#888888';
+  ctx.fillText('Simulado concluido', 540, 340);
+
+  // TITULO SIMULADO
+  const tituloMax = titulo.length > 26 ? titulo.substring(0, 26) + '...' : titulo;
+  ctx.font = 'bold 56px Arial';
+  ctx.fillStyle = '#f0f0f0';
+  ctx.fillText(tituloMax, 540, 405);
+
+  // CARD CENTRAL
+  ctx.fillStyle = '#1e1e1e';
+  ctx.beginPath();
+  ctx.roundRect(100, 450, 880, 200, 16);
+  ctx.fill();
+  ctx.strokeStyle = corPct;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // PORCENTAGEM — só o número + %
+  ctx.font = 'bold 90px Arial';
+  ctx.fillStyle = corPct;
+  ctx.fillText(pct, 540, 565);
+
+  // FRASE MOTIVACIONAL
+  ctx.font = '30px Arial';
+  ctx.fillStyle = '#888888';
+  ctx.fillText(frase, 540, 620);
+
+  // CARDS STATS
+  ctx.fillStyle = '#1e1e1e';
+  ctx.beginPath();
+  ctx.roundRect(100, 700, 415, 110, 12);
+  ctx.fill();
+  ctx.strokeStyle = '#2a2a2a';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  ctx.fillStyle = '#1e1e1e';
+  ctx.beginPath();
+  ctx.roundRect(565, 700, 415, 110, 12);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.font = '26px Arial';
+  ctx.fillStyle = '#888888';
+  ctx.fillText('ACERTOS', 307, 740);
+  ctx.font = 'bold 38px Arial';
+  ctx.fillStyle = corPct;
+  ctx.fillText(acertos + ' corretas', 307, 785);
+
+  ctx.font = '26px Arial';
+  ctx.fillStyle = '#888888';
+  ctx.fillText('TEMPO', 772, 740);
+  ctx.font = 'bold 38px Arial';
+  ctx.fillStyle = '#f0f0f0';
+  ctx.fillText(tempo, 772, 785);
+
+  // DIVISOR
+  ctx.strokeStyle = '#2a2a2a';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(100, 820);
+  ctx.lineTo(980, 820);
+  ctx.stroke();
+
+  // CTA
+  ctx.font = '32px Arial';
+  ctx.fillStyle = '#888888';
+  ctx.fillText('Teste seus conhecimentos tambem!', 540, 885);
+  ctx.font = 'bold 44px Arial';
+  ctx.fillStyle = '#f5a623';
+  ctx.fillText('simuladotop.com.br', 540, 945);
+
+  // FAIXA RODAPE
+  ctx.fillStyle = '#f5a623';
+  ctx.fillRect(0, 980, 1080, 100);
+  ctx.font = 'bold 38px Arial';
+  ctx.fillStyle = '#111111';
+  ctx.fillText('Estude. Evolua. Seja Aprovado!', 540, 1040);
+
+  const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
+  const pctTexto = pct;
+  const tituloTexto = titulo;
+  const file = new File([blob], 'resultado-simuladotop.png', { type: 'image/png' });
+  const url = URL.createObjectURL(blob);
+
+  if (modo === 'baixar') {
+    // Baixa a imagem direto
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'resultado-simuladotop.png';
+    a.click();
+    URL.revokeObjectURL(url);
+
+  } else if (modo === 'whatsapp') {
+    // Tenta compartilhar com imagem (mobile)
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({
+        files: [file],
+        title: 'SimuladoTop',
+        text: `Tirei ${pctTexto} no simulado "${tituloTexto}"! 🏆`
+      }).catch(() => {});
+    } else {
+      // Fallback: abre WhatsApp Web com texto
+      const texto = `🏆 Tirei ${pctTexto} no simulado "${tituloTexto}" no SimuladoTop!\n\nTeste seus conhecimentos também: ${window.location.origin}`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank');
+    }
+  }
+}
+</script>
+<script src="js/simulado.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "inf-001",
+    "titulo": "Lógica de Programação",
+    "questoes_total": 20,
+    "tempo_minutos": 50,
+    "dificuldade": "Difícil",
+    "slug": "logica-programacao"
+  },
+  {
+    "id": "adm-001",
+    "titulo": "Gestão de Processos",
+    "questoes_total": 15,
+    "tempo_minutos": 30,
+    "dificuldade": "Média",
+    "slug": "gestao-processos"
+  },
+  {
+    "id": "ele-001",
+    "titulo": "Circuitos Elétricos",
+    "questoes_total": 10,
+    "tempo_minutos": 25,
+    "dificuldade": "Média",
+    "slug": "circuitos-eletricos"
+  }
+]

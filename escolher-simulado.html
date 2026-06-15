@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escolher Disciplina — SimuladoTop</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- ═══ AUTENTICAÇÃO - Carregado no head com defer ═══ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/auth-check.js" defer></script>
+  
+  <style>
+    .selection-container {
+      max-width: 1200px;
+      margin: 60px auto;
+      padding: 0 40px;
+    }
+    .selection-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .selection-header h1 {
+      font-family: var(--font-head);
+      font-size: 3.5rem;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+    .selection-header p {
+      color: var(--muted);
+      font-size: 1.2rem;
+    }
+    .discipline-card {
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .discipline-icon {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+    }
+    .discipline-title {
+      font-family: var(--font-head);
+      font-size: 1.8rem;
+      color: var(--text);
+      font-weight: 700;
+    }
+    .discipline-desc {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .discipline-footer {
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .discipline-stats {
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .btn-start-discipline {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 640px) {
+      .selection-container { padding: 0 20px; margin: 40px auto; }
+      .selection-header h1 { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="index.html">Simulado<span>Top</span></a>
+    <div class="header-nav">
+      <a href="index.html">Início</a>
+      <a href="ranking.html">Ranking</a>
+      <a href="blog.html">Blog</a>
+      <div id="auth-container" class="auth-actions" aria-label="Ações de autenticação"></div>
+    </div>
+  </div>
+</header>
+
+<main class="selection-container">
+  <div class="selection-header">
+    <h1 id="area-title">Carregando área...</h1>
+    <p>Selecione a disciplina que deseja praticar hoje.</p>
+  </div>
+
+  <div class="grid-top" id="discipline-grid">
+    <!-- Injetado via JS -->
+  </div>
+</main>
+
+<footer class="footer-top">
+  <div class="footer-top-inner">
+    <div style="margin-bottom:16px;">
+      <span style="font-family:var(--font-head);font-size:1.1rem;font-weight:700;color:var(--accent);">Simulado<span style="color:var(--text);">Top</span></span>
+    </div>
+    <div class="footer-top-links">
+      <a href="sobre.html">Sobre</a>
+      <a href="privacidade.html">Privacidade</a>
+      <a href="termos.html">Termos de Uso</a>
+    </div>
+    <div class="footer-top-divider"></div>
+    <p class="footer-top-legal">
+      Este site não possui vínculo com as instituições organizadoras dos concursos e vestibulares citados. As questões são baseadas em provas anteriores de domínio público.
+    </p>
+    <p class="footer-top-copy">
+      © 2026 SimuladoTop — Todos os direitos reservados.
+    </p>
+  </div>
+</footer>
+
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const area = urlParams.get('area');
+
+  const areaData = {
+    'exatas': {
+      titulo: 'Ciências Exatas',
+      disciplinas: [
+        { id: 'matematica', titulo: 'Matemática', desc: 'Geometria Analítica, Funções e Cálculo.', icon: '📐', questoes: '40' },
+        { id: 'fisica', titulo: 'Física', desc: 'Mecânica, Termodinâmica e Óptica.', icon: '⚡', questoes: '35' },
+        { id: 'quimica', titulo: 'Química', desc: 'Química Orgânica e Inorgânica.', icon: '🧪', questoes: '30' }
+      ]
+    },
+    'humanas': {
+      titulo: 'Ciências Humanas',
+      disciplinas: [
+        { id: 'historia', titulo: 'História', desc: 'História do Brasil e Geral.', icon: '🏛️', questoes: '40' },
+        { id: 'geografia', titulo: 'Geografia', desc: 'Geopolítica e Meio Ambiente.', icon: '🌍', questoes: '35' },
+        { id: 'portugues', titulo: 'Português', desc: 'Gramática e Literatura.', icon: '📚', questoes: '40' }
+      ]
+    },
+    'biologicas': {
+      titulo: 'Ciências Biológicas',
+      disciplinas: [
+        { id: 'biologia', titulo: 'Biologia', desc: 'Genética e Ecologia.', icon: '🧬', questoes: '40' },
+        { id: 'ciencias', titulo: 'Ciências', desc: 'Análise de fenômenos naturais.', icon: '🌿', questoes: '30' }
+      ]
+    },
+    'tecnicos': {
+      titulo: 'Formação Técnica',
+      disciplinas: [
+        { id: 'informatica', titulo: 'Informática', desc: 'Hardware e Redes.', icon: '💻', questoes: '30' },
+        { id: 'programacao', titulo: 'Programação', desc: 'Lógica e Algoritmos.', icon: '⚙️', questoes: '35' }
+      ]
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const data = areaData[area];
+    if (!data) {
+      window.location.href = 'index.html';
+      return;
+    }
+
+    document.getElementById('area-title').innerText = data.titulo;
+    const grid = document.getElementById('discipline-grid');
+
+    grid.innerHTML = data.disciplinas.map(d => `
+      <a href="simulado.html?area=${area}&disciplina=${d.id}" class="discipline-card card-top">
+        <div class="discipline-icon">${d.icon}</div>
+        <h3 class="discipline-title">${d.titulo}</h3>
+        <p class="discipline-desc">${d.desc}</p>
+        <div class="discipline-footer">
+          <span class="discipline-stats">${d.questoes} Questões</span>
+          <span class="btn-start-discipline">Iniciar Simulado →</span>
+        </div>
+      </a>
+    `).join('');
+  });
+</script>
+</body>
+</html>
+
+

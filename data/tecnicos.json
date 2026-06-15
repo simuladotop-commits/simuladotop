@@ -1,0 +1,11 @@
+{
+  "titulo": "Simulado de Formação Técnica",
+  "questoes": [
+    {
+      "id": 1,
+      "enunciado": "Em lógica de programação, qual operador representa o 'E' lógico?",
+      "alternativas": ["||", "!", "&&", "==", "!="],
+      "gabarito": 2
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SimuladoTop — Exatas</title>
+  <meta name="description" content="Lista de provas e simulados para a área de Exatas com foco em ENEM, ETEC e vestibulares técnicos." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  
+  <!-- ═══ AUTENTICAÇÃO - Carregado no head com defer ═══ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/auth-check.js" defer></script>
+  
+  <style>
+    .page-hero {
+      padding: 42px 0 20px;
+    }
+
+    .page-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .page-hero h1 {
+      font-family: var(--font-head);
+      font-size: clamp(2.2rem, 4vw, 3rem);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .page-hero p {
+      color: var(--muted);
+      max-width: 680px;
+      margin-bottom: 28px;
+    }
+
+    footer {
+      margin-top: 80px;
+      border-top: 1px solid var(--border);
+      padding-top: 80px;
+    }
+
+    @media (max-width: 640px) {
+      .page-hero { padding-top: 30px; }
+      .area-panel { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <a class="logo" href="index.html">Simulado<span>Top</span></a>
+      <div class="header-nav">
+        <a href="index.html">Início</a>
+        <a href="ranking.html">Ranking</a>
+        <a href="blog.html">Blog</a>
+        <div id="auth-container" class="auth-actions" aria-label="Ações de autenticação"></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="site-wrap">
+    <section class="page-hero">
+      <p class="page-eyebrow">Área de Exatas</p>
+      <h1>Simulados de matemática, física e química</h1>
+      <p>Escolha uma prova e comece a treinar com a mesma organização do restante do projeto. Este modelo já está pronto para receber as páginas isoladas de cada prova.</p>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>Provas disponíveis</h2>
+        <p>Pratique com simulados focados nos principais vestibulares.</p>
+      </div>
+
+      <div class="category-grid" id="provas-grid">
+        <p style="color:#888;padding:20px">Carregando provas...</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div style="margin-bottom:16px;">
+        <span style="font-family:var(--font-head);font-size:1.1rem;font-weight:700;color:var(--accent);">Simulado<span style="color:var(--text);">Top</span></span>
+      </div>
+      <div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:14px;">
+        <a href="sobre.html" style="color:var(--muted);text-decoration:none;font-size:.82rem;">Sobre</a>
+        <a href="privacidade.html" style="color:var(--muted);text-decoration:none;font-size:.82rem;">Privacidade</a>
+        <a href="termos.html" style="color:var(--muted);text-decoration:none;font-size:.82rem;">Termos de Uso</a>
+      </div>
+      <div style="border-top:1px solid var(--border);margin:14px auto;max-width:400px;"></div>
+      <p style="font-size:.72rem;color:#2e3340;">© 2026 SimuladoTop — Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    async function renderExatas() {
+      const arquivo = 'data/exatas_provas.json';
+      const pasta = 'data/exatas/';
+      const grid = document.getElementById('provas-grid');
+      if (!grid) return;
+      grid.innerHTML = '<p style="color:#888;padding:20px">Carregando provas...</p>';
+
+      try {
+        const res = await fetch(arquivo);
+        if (!res.ok) throw new Error('Arquivo não encontrado: ' + arquivo);
+        const provas = await res.json();
+
+        if (!Array.isArray(provas) || provas.length === 0) {
+          grid.innerHTML = '<p style="color:#888;padding:20px">Nenhuma prova disponível.</p>';
+          return;
+        }
+
+        grid.innerHTML = provas.map(p => {
+          const jsonPath = pasta + p.slug + '.json';
+          const tag = p.dificuldade || 'Simulado';
+          const icon = '📐';
+          const questoes = p.questoes_total ? `${p.questoes_total} questões` : '';
+          const tempo = p.tempo_minutos ? `~${p.tempo_minutos} min` : '';
+          return `
+            <div class="category-card category-card--exatas">
+              <span class="category-mark">${tag}</span>
+              <span class="category-icon">${icon}</span>
+              <h3>
+                <a href="simulado.html?prova=${encodeURIComponent(jsonPath)}" class="main-link">${p.titulo}</a>
+              </h3>
+              <p>${[questoes, tempo].filter(Boolean).join(' · ')}</p>
+              <div class="category-footer">
+                <a class="category-chip" href="simulado.html?prova=${encodeURIComponent(jsonPath)}">Iniciar Simulado</a>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error('Erro ao carregar provas:', err);
+        grid.innerHTML = `<p style="color:#ef4444;padding:20px">Erro ao carregar provas. Verifique o arquivo ${arquivo}.</p>`;
+      }
+    }
+    window.addEventListener('DOMContentLoaded', renderExatas);
+  </script>
+</body>
+</html>
+

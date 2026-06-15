@@ -1,0 +1,236 @@
+<!-- TESTE DE SINCRONIZAÇÃO DE AUTENTICAÇÃO -->
+<!-- Abra este arquivo no navegador com as ferramentas do desenvolvedor abertas para validar -->
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Sincronização de Autenticação</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0d0f14;
+            color: #e8eaf0;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-section {
+            background: #161a23;
+            border: 1px solid #252b38;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #f5a623;
+            margin-top: 0;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .status.success {
+            background: #22c55e;
+            color: #000;
+        }
+        .status.error {
+            background: #ef4444;
+            color: #fff;
+        }
+        .status.info {
+            background: #3b82f6;
+            color: #fff;
+        }
+        button {
+            background: #f5a623;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+        }
+        button:hover {
+            filter: brightness(1.1);
+        }
+        code {
+            background: #0d0f14;
+            padding: 10px;
+            border-left: 3px solid #f5a623;
+            display: block;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste - Sincronização de Autenticação</h1>
+    
+    <div class="test-section">
+        <h2>1. Estado Global Compartilhado</h2>
+        <p>Verifica se `window.__AUTH_STATE` foi criado corretamente:</p>
+        <button onclick="testarEstadoGlobal()">Verificar Estado Global</button>
+        <div id="test-1"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Função updateHeaderAuth()</h2>
+        <p>Verifica se `window.updateHeaderAuth()` está disponível:</p>
+        <button onclick="testarFuncaoUpdateHeader()">Verificar Função</button>
+        <div id="test-2"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Verificação de Autenticação</h2>
+        <p>Verifica o estado de autenticação atual:</p>
+        <button onclick="testarAutenticacao()">Verificar Autenticação</button>
+        <div id="test-3"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Sincronização Header</h2>
+        <p>Verifica se o header foi atualizado corretamente:</p>
+        <button onclick="testarHeaderAtualizado()">Verificar Header</button>
+        <div id="test-4"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. Teste Completo de Sincronização</h2>
+        <p>Executa todos os testes em sequência:</p>
+        <button onclick="executarTodosTestes()">Executar Todos os Testes</button>
+        <div id="test-completo"></div>
+    </div>
+
+    <script>
+        function testarEstadoGlobal() {
+            const resultado = document.getElementById('test-1');
+            try {
+                if (typeof window.__AUTH_STATE === 'undefined') {
+                    resultado.innerHTML = '<div class="status error">❌ ERRO: window.__AUTH_STATE não foi criado</div>';
+                    return;
+                }
+
+                const estado = window.__AUTH_STATE;
+                const tem_session = 'session' in estado;
+                const tem_user = 'user' in estado;
+                const tem_isReady = 'isReady' in estado;
+
+                if (tem_session && tem_user && tem_isReady) {
+                    resultado.innerHTML = `
+                        <div class="status success">✅ OK: window.__AUTH_STATE foi criado</div>
+                        <code>${JSON.stringify(estado, null, 2)}</code>
+                    `;
+                } else {
+                    resultado.innerHTML = '<div class="status error">❌ ERRO: window.__AUTH_STATE incompleto</div>';
+                }
+            } catch (e) {
+                resultado.innerHTML = `<div class="status error">❌ ERRO: ${e.message}</div>`;
+            }
+        }
+
+        function testarFuncaoUpdateHeader() {
+            const resultado = document.getElementById('test-2');
+            try {
+                if (typeof window.updateHeaderAuth !== 'function') {
+                    resultado.innerHTML = '<div class="status error">❌ ERRO: window.updateHeaderAuth não é uma função</div>';
+                    return;
+                }
+
+                resultado.innerHTML = '<div class="status success">✅ OK: window.updateHeaderAuth() está disponível</div>';
+            } catch (e) {
+                resultado.innerHTML = `<div class="status error">❌ ERRO: ${e.message}</div>`;
+            }
+        }
+
+        function testarAutenticacao() {
+            const resultado = document.getElementById('test-3');
+            try {
+                const estado = window.__AUTH_STATE;
+                const usuarioLogado = !!estado?.user;
+
+                if (usuarioLogado) {
+                    resultado.innerHTML = `
+                        <div class="status success">✅ Usuário logado detectado:</div>
+                        <code>${JSON.stringify(estado.user, null, 2)}</code>
+                    `;
+                } else {
+                    resultado.innerHTML = '<div class="status info">ℹ️ Nenhum usuário logado no momento</div>';
+                }
+            } catch (e) {
+                resultado.innerHTML = `<div class="status error">❌ ERRO: ${e.message}</div>`;
+            }
+        }
+
+        function testarHeaderAtualizado() {
+            const resultado = document.getElementById('test-4');
+            try {
+                const authContainer = document.getElementById('auth-container');
+                if (!authContainer) {
+                    resultado.innerHTML = '<div class="status error">❌ ERRO: Container #auth-container não encontrado</div>';
+                    return;
+                }
+
+                const authBtn = authContainer.querySelector('.btn-login');
+                const temLoggedIn = !!authContainer.querySelector('.user-menu');
+                const conteudo = authBtn ? authBtn.textContent.trim() : 'sem botão de login';
+
+                if (temLoggedIn) {
+                    resultado.innerHTML = `
+                        <div class="status success">✅ Header está no estado LOGADO</div>
+                        <code>Conteúdo: "${conteudo}"</code>
+                    `;
+                } else {
+                    resultado.innerHTML = `
+                        <div class="status info">ℹ️ Header está no estado NÃO LOGADO</div>
+                        <code>Conteúdo: "${conteudo}"</code>
+                    `;
+                }
+            } catch (e) {
+                resultado.innerHTML = `<div class="status error">❌ ERRO: ${e.message}</div>`;
+            }
+        }
+
+        function executarTodosTestes() {
+            const resultado = document.getElementById('test-completo');
+            resultado.innerHTML = '<div class="status info">⏳ Executando testes...</div>';
+
+            setTimeout(() => {
+                testarEstadoGlobal();
+                testarFuncaoUpdateHeader();
+                testarAutenticacao();
+                testarHeaderAtualizado();
+
+                const teste1 = document.getElementById('test-1').innerHTML;
+                const teste2 = document.getElementById('test-2').innerHTML;
+                const teste3 = document.getElementById('test-3').innerHTML;
+                const teste4 = document.getElementById('test-4').innerHTML;
+
+                const todosOk = teste1.includes('success') && teste2.includes('success');
+
+                if (todosOk) {
+                    resultado.innerHTML = `
+                        <div class="status success">✅ TODOS OS TESTES PASSARAM!</div>
+                        <p>A sincronização de autenticação está funcionando corretamente.</p>
+                    `;
+                } else {
+                    resultado.innerHTML = `
+                        <div class="status error">❌ ALGUNS TESTES FALHARAM</div>
+                        <p>Verifique o console para mais detalhes.</p>
+                    `;
+                }
+            }, 500);
+        }
+
+        // Log automático ao carregar
+        console.log('=== TESTE DE SINCRONIZAÇÃO DE AUTENTICAÇÃO ===');
+        console.log('Estado Global:', window.__AUTH_STATE);
+        console.log('Função updateHeaderAuth:', typeof window.updateHeaderAuth);
+        console.log('===============================================');
+    </script>
+</body>
+</html>

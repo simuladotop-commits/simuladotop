@@ -1,0 +1,26 @@
+[
+  {
+    "id": "mat-001",
+    "titulo": "Geometria Analítica",
+    "questoes_total": 20,
+    "tempo_minutos": 40,
+    "dificuldade": "Média",
+    "slug": "geometria-analitica"
+  },
+  {
+    "id": "mat-002",
+    "titulo": "Funções de 1º e 2º Grau",
+    "questoes_total": 15,
+    "tempo_minutos": 30,
+    "dificuldade": "Fácil",
+    "slug": "funcoes-primeiro-segundo-grau"
+  },
+  {
+    "id": "fis-001",
+    "titulo": "Cinemática Escalar",
+    "questoes_total": 10,
+    "tempo_minutos": 25,
+    "dificuldade": "Média",
+    "slug": "cinematica-escalar"
+  }
+]

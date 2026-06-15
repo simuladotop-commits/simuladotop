@@ -1,0 +1,11 @@
+{
+  "titulo": "Simulado de Ciências Humanas",
+  "questoes": [
+    {
+      "id": 1,
+      "enunciado": "Quem foi o primeiro presidente do Brasil?",
+      "alternativas": ["Getúlio Vargas", "Deodoro da Fonseca", "Floriano Peixoto", "Prudente de Morais", "Juscelino Kubitschek"],
+      "gabarito": 1
+    }
+  ]
+}

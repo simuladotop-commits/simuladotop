@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Termos de Uso | SimuladoTop</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  
+  <!-- ═══ AUTENTICAÇÃO - Carregado no head com defer ═══ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/auth-check.js" defer></script>
+  
+  <style>
+    .doc-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 28px 80px;
+    }
+    .doc-tag {
+      display: inline-block;
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      padding: 2px 8px;
+      margin-bottom: 16px;
+    }
+    .doc-title {
+      font-family: var(--font-head);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+    .doc-updated {
+      font-size: .8rem;
+      color: var(--muted);
+      margin-bottom: 36px;
+    }
+    .doc-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .doc-section h2 {
+      font-family: var(--font-head);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .doc-section p {
+      font-size: .92rem;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 10px;
+    }
+    .doc-section p:last-child { margin-bottom: 0; }
+    .doc-section ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .doc-section ul li {
+      font-size: .92rem;
+      color: var(--muted);
+      line-height: 1.6;
+      padding-left: 16px;
+      position: relative;
+    }
+    .doc-section ul li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: .8rem;
+    }
+    .doc-alert {
+      background: rgba(239,68,68,.08);
+      border: 1px solid rgba(239,68,68,.3);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      font-size: .88rem;
+      color: #fca5a5;
+      line-height: 1.65;
+    }
+    .doc-contact {
+      background: linear-gradient(135deg, #1a1400 0%, #0d0f14 100%);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-top: 24px;
+      font-size: .88rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .doc-contact strong { color: var(--text); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="index.html">Simulado<span>Top</span></a>
+    <div class="header-nav">
+      <a href="index.html">Início</a>
+      <a href="ranking.html">Ranking</a>
+      <a href="blog.html">Blog</a>
+      <div id="auth-container" class="auth-actions" aria-label="Ações de autenticação"></div>
+    </div>
+  </div>
+</header>
+
+<div class="doc-wrap">
+
+  <div class="doc-tag">Legal</div>
+  <h1 class="doc-title">Termos de Uso</h1>
+  <p class="doc-updated">Última atualização: maio de 2026</p>
+
+  <div class="doc-alert">
+    ⚠️ Ao utilizar o SimuladoTop, você concorda com estes Termos de Uso. Se não concordar com alguma cláusula, por favor, não utilize a plataforma.
+  </div>
+
+  <div class="doc-section">
+    <h2>1. Sobre a plataforma</h2>
+    <p>O SimuladoTop é uma plataforma educacional gratuita que disponibiliza simulados online para preparação a concursos públicos e vestibulares. O serviço é oferecido sem garantia de aprovação em qualquer processo seletivo.</p>
+    <p>Não somos afiliados, associados ou representantes oficiais de nenhuma banca examinadora, instituição pública, órgão governamental ou organização citada em nosso conteúdo.</p>
+  </div>
+
+  <div class="doc-section">
+    <h2>2. Uso permitido</h2>
+    <p>Ao utilizar o SimuladoTop, você concorda em:</p>
+    <ul>
+      <li>Usar a plataforma apenas para fins educacionais e de estudo pessoal</li>
+      <li>Não reproduzir, copiar ou redistribuir o conteúdo sem autorização prévia</li>
+      <li>Não tentar acessar áreas restritas ou sistemas internos da plataforma</li>
+      <li>Não utilizar robôs, scrapers ou outros meios automatizados para extrair conteúdo</li>
+      <li>Fornecer informações verdadeiras ao criar uma conta (quando disponível)</li>
+    </ul>
+  </div>
+
+  <div class="doc-section">
+    <h2>3. Propriedade intelectual</h2>
+    <p>O design, a identidade visual, os textos explicativos, o código-fonte e a estrutura pedagógica dos simulados são de propriedade do SimuladoTop e protegidos por direitos autorais.</p>
+    <p>As questões utilizadas são baseadas em provas anteriores de domínio público, disponibilizadas pelas bancas examinadoras. O SimuladoTop não reivindica propriedade sobre questões de provas oficiais.</p>
+  </div>
+
+  <div class="doc-section">
+    <h2>4. Isenção de responsabilidade</h2>
+    <p>O SimuladoTop não garante que:</p>
+    <ul>
+      <li>O conteúdo dos simulados seja idêntico ao das provas reais futuras</li>
+      <li>A plataforma estará disponível de forma ininterrupta e sem erros</li>
+      <li>O uso da plataforma garantirá aprovação em concursos ou vestibulares</li>
+      <li>As informações sobre editais e bancas estejam sempre atualizadas</li>
+    </ul>
+    <p>O uso da plataforma é de inteira responsabilidade do usuário. Recomendamos sempre consultar os editais oficiais dos concursos e vestibulares de interesse.</p>
+  </div>
+
+  <div class="doc-section">
+    <h2>5. Links de afiliados e anúncios</h2>
+    <p>O SimuladoTop pode exibir links de afiliados para cursos, livros e materiais de estudo. Ao clicar nesses links e realizar uma compra, recebemos uma comissão sem custo adicional para você.</p>
+    <p>Também podemos exibir anúncios de terceiros (como Google AdSense). O SimuladoTop não se responsabiliza pelo conteúdo dos anúncios exibidos.</p>
+  </div>
+
+  <div class="doc-section">
+    <h2>6. Contas de usuário</h2>
+    <p>Quando o sistema de login estiver disponível, você será responsável por manter a confidencialidade de sua senha e por todas as atividades realizadas em sua conta. Notifique-nos imediatamente em caso de uso não autorizado.</p>
+    <p>Reservamo-nos o direito de suspender ou encerrar contas que violem estes Termos de Uso, sem aviso prévio.</p>
+  </div>
+
+  <div class="doc-section">
+    <h2>7. Privacidade</h2>
+    <p>O tratamento dos seus dados pessoais é regido pela nossa <a href="privacidade.html" style="color:var(--accent);">Política de Privacidade</a>, que faz parte integrante destes Termos de Uso.</p>
+  </div>
+
+  <div class="doc-section">
+    <h2>8. Modificações nos termos</h2>
+    <p>Reservamo-nos o direito de modificar estes Termos de Uso a qualquer momento. As alterações entrarão em vigor imediatamente após a publicação. O uso continuado da plataforma após as alterações implica na aceitação dos novos termos.</p>
+  </div>
+
+  <div class="doc-section">
+    <h2>9. Lei aplicável</h2>
+    <p>Estes Termos de Uso são regidos pelas leis da República Federativa do Brasil. Qualquer disputa relacionada ao uso da plataforma será submetida ao foro da comarca de São Paulo - SP, com renúncia expressa a qualquer outro.</p>
+  </div>
+
+  <div class="doc-contact">
+    <strong>Dúvidas sobre os Termos de Uso?</strong><br>
+    Entre em contato pelo e-mail: <strong>contato@simuladotop.com.br</strong><br>
+    Respondemos em até 5 dias úteis.
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-container">
+    <div class="footer-brand">
+      <span class="logo-text">Simulado<span class="logo-highlight">Top</span></span>
+    </div>
+
+    <div class="footer-nav">
+      <a href="sobre.html">Sobre</a>
+      <a href="privacidade.html">Privacidade</a>
+      <a href="termos.html">Termos de Uso</a>
+    </div>
+
+    <hr class="footer-line">
+
+    <div class="footer-info">
+      <p class="footer-text">Este site não possui vínculo com as instituições organizadoras dos concursos e vestibulares citados. As questões são baseadas em provas anteriores de domínio público.</p>
+      <p class="footer-text">© 2026 SimuladoTop — Todos os direitos reservados.</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
+

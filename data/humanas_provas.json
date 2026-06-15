@@ -1,0 +1,26 @@
+[
+  {
+    "id": "his-001",
+    "titulo": "Brasil Colônia",
+    "questoes_total": 20,
+    "tempo_minutos": 40,
+    "dificuldade": "Média",
+    "slug": "brasil-colonia"
+  },
+  {
+    "id": "geo-001",
+    "titulo": "Geografia Urbana",
+    "questoes_total": 15,
+    "tempo_minutos": 30,
+    "dificuldade": "Fácil",
+    "slug": "geografia-urbana"
+  },
+  {
+    "id": "soc-001",
+    "titulo": "Clássicos da Sociologia",
+    "questoes_total": 10,
+    "tempo_minutos": 20,
+    "dificuldade": "Difícil",
+    "slug": "classicos-sociologia"
+  }
+]

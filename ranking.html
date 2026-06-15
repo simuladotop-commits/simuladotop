@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ranking | SimuladoTop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Mesmo padrão do site: Supabase + auth -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/auth-check.js" defer></script>
+
+  <!-- CSS global do site -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+    /* ── variáveis locais (espelham o style.css do site) ── */
+    :root {
+      --accent:    #f5a623;
+      --accent-dim:#c07d10;
+      --accent-glow: rgba(245,166,35,.16);
+      --silver:    #b0b8c8;
+      --bronze:    #cd7f32;
+    }
+
+    /* ── layout ── */
+    .rank-page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 28px 80px;
+    }
+
+    /* ── cabeçalho da página ── */
+    .rank-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+    .rank-header h1 {
+      font-family: var(--font-head, 'Barlow Condensed', sans-serif);
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.5px;
+    }
+    .rank-header h1 span { color: var(--accent); }
+    .rank-header p {
+      font-size: .9rem;
+      color: var(--muted, #888);
+      margin-top: 8px;
+      max-width: 460px;
+    }
+    .period-badge {
+      padding: 6px 16px;
+      border-radius: 20px;
+      background: var(--accent-glow);
+      border: 1px solid var(--accent-dim);
+      color: var(--accent);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: .85rem;
+      letter-spacing: .5px;
+      white-space: nowrap;
+      align-self: flex-start;
+      margin-top: 6px;
+    }
+
+    /* ── abas ── */
+    .period-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .period-button {
+      padding: 8px 22px;
+      border-radius: 20px;
+      border: 1px solid var(--border, #2e2e2e);
+      background: transparent;
+      color: var(--muted, #888);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s, color .2s, border-color .2s;
+    }
+    .period-button:hover { color: var(--text, #e8e8e8); border-color: #555; }
+    .period-button.active {
+      background: var(--accent);
+      color: #111;
+      border-color: var(--accent);
+    }
+
+    /* ── stats cards ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--surface, #1a1a1a);
+      border: 1px solid var(--border, #2e2e2e);
+      border-radius: var(--radius, 12px);
+      padding: 18px 20px;
+    }
+    .stat-card .val {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--accent);
+      line-height: 1;
+      min-height: 2rem;
+    }
+    .stat-card .lbl {
+      font-size: .78rem;
+      color: var(--muted, #888);
+      margin-top: 6px;
+    }
+
+    /* ── grid principal ── */
+    .rank-body {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    /* ── pódio ── */
+    .podium-grid {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .podium-card {
+      flex: 1;
+      max-width: 180px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .podium-avatar {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 1.2rem;
+      border: 3px solid transparent;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .podium-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .podium-1 .podium-avatar { background:#2a2000; border-color:var(--accent); color:var(--accent); }
+    .podium-2 .podium-avatar { background:#1e2430; border-color:var(--silver); color:var(--silver); }
+    .podium-3 .podium-avatar { background:#2a1800; border-color:var(--bronze); color:var(--bronze); }
+    .podium-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: .88rem;
+      text-align: center; max-width: 120px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .podium-score {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900; font-size: 1rem;
+    }
+    .podium-1 .podium-score { color: var(--accent); }
+    .podium-2 .podium-score { color: var(--silver); }
+    .podium-3 .podium-score { color: var(--bronze); }
+    .podium-block {
+      width: 100%; border-radius: 8px 8px 0 0;
+      display: grid; place-items: center;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: .9rem;
+      padding: 8px 0;
+    }
+    .podium-1 .podium-block { height: 80px; background:linear-gradient(180deg,#3a2900,#2a1e00); border:1px solid var(--accent-dim); }
+    .podium-2 .podium-block { height: 56px; background:linear-gradient(180deg,#252d38,#1a2330); border:1px solid #4a5a70; }
+    .podium-3 .podium-block { height: 44px; background:linear-gradient(180deg,#2e1c0a,#221406); border:1px solid #7a5020; }
+
+    /* ── lista ── */
+    .list-card {
+      background: var(--surface, #1a1a1a);
+      border: 1px solid var(--border, #2e2e2e);
+      border-radius: var(--radius, 12px);
+      overflow: hidden;
+    }
+    .list-card header {
+      display: grid;
+      grid-template-columns: 36px 40px 1fr 80px 70px 70px;
+      gap: 8px;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border, #2e2e2e);
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted, #888);
+    }
+    .list-item {
+      display: grid;
+      grid-template-columns: 36px 40px 1fr 80px 70px 70px;
+      gap: 8px;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border, #2e2e2e);
+      transition: background .15s;
+    }
+    .list-item:last-child { border-bottom: none; }
+    .list-item:hover { background: rgba(255,255,255,.03); }
+    .list-pos {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900; font-size: 1rem;
+      color: var(--muted, #888); text-align: center;
+    }
+    .mini-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--border, #2e2e2e);
+      border: 2px solid var(--border, #2e2e2e);
+      display: grid; place-items: center;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: .9rem;
+      color: var(--muted, #888);
+      overflow: hidden; flex-shrink: 0;
+    }
+    .mini-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .item-name {
+      font-weight: 600; font-size: .9rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .item-pts {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900; font-size: 1rem; color: var(--accent);
+    }
+    .item-time, .item-pct {
+      font-size: .82rem; color: var(--muted, #888);
+    }
+
+    /* ── sidebar ── */
+    .rank-aside { display: flex; flex-direction: column; gap: 16px; }
+
+    .aside-card {
+      background: var(--surface, #1a1a1a);
+      border: 1px solid var(--border, #2e2e2e);
+      border-radius: var(--radius, 12px);
+      padding: 20px;
+    }
+    .aside-card h3 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .75rem; font-weight: 800;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: var(--muted, #888); margin-bottom: 14px;
+    }
+
+    /* minha posição */
+    .my-pos-box {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px;
+      background: var(--accent-glow);
+      border: 1px solid var(--accent-dim);
+      border-radius: 10px;
+    }
+    .my-pos-avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--accent); color: #111;
+      display: grid; place-items: center;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 1.1rem;
+      overflow: hidden; flex-shrink: 0;
+    }
+    .my-pos-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .my-pos-info { flex: 1; min-width: 0; }
+    .my-pos-info .name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 1rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .my-pos-info .status { font-size: .75rem; color: var(--muted, #888); margin-top: 2px; }
+    .my-pos-nums { text-align: right; flex-shrink: 0; }
+    .my-pos-nums .rank-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900; font-size: 1.3rem; color: var(--accent);
+      display: block;
+    }
+    .my-pos-nums .pts-num {
+      font-size: .75rem; color: var(--accent-dim);
+    }
+
+    /* top3 sidebar */
+    .aside-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border, #2e2e2e);
+    }
+    .aside-item:last-child { border-bottom: none; }
+    .aside-item .pos-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900; font-size: 1rem; width: 18px; text-align: center;
+    }
+    .aside-item:nth-child(1) .pos-num { color: var(--accent); }
+    .aside-item:nth-child(2) .pos-num { color: var(--silver); }
+    .aside-item:nth-child(3) .pos-num { color: var(--bronze); }
+    .aside-item .item-info { flex: 1; min-width: 0; }
+    .aside-item .item-info strong {
+      font-size: .88rem; font-weight: 600;
+      display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .aside-item .item-info span { font-size: .75rem; color: var(--muted, #888); }
+    .aside-item .aside-pts {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: .9rem; color: var(--accent);
+    }
+
+    /* loading / empty */
+    .loading-box {
+      display: flex; justify-content: center; align-items: center;
+      padding: 60px 0;
+    }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid var(--border, #2e2e2e);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty-state {
+      text-align: center; padding: 48px;
+      font-size: .9rem; color: var(--muted, #888);
+    }
+
+    /* note */
+    .rank-note {
+      font-size: .74rem; color: var(--muted, #888);
+      margin-top: 14px; padding-top: 12px;
+      border-top: 1px solid var(--border, #2e2e2e);
+      line-height: 1.5;
+    }
+
+    /* responsive */
+    @media (max-width: 900px) {
+      .rank-body { grid-template-columns: 1fr; }
+      .rank-aside { order: -1; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .list-card header,
+      .list-item { grid-template-columns: 28px 34px 1fr 70px; }
+      .list-card header span:nth-child(5),
+      .list-card header span:nth-child(6),
+      .list-item .item-time,
+      .list-item .item-pct { display: none; }
+    }
+    @media (max-width: 520px) {
+      .rank-page { padding: 32px 16px 60px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ HEADER PADRÃO DO SITE ═══ -->
+  <header>
+    <div class="header-inner">
+      <a class="logo" href="index.html">Simulado<span>Top</span></a>
+      <div class="header-nav">
+        <a href="index.html">Início</a>
+        <a href="ranking.html" class="active">Ranking</a>
+        <div id="auth-container" class="auth-actions" aria-label="Ações de autenticação"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ CONTEÚDO DA PÁGINA ═══ -->
+  <main class="rank-page">
+
+    <!-- cabeçalho -->
+    <div class="rank-header">
+      <div>
+        <h1>🏆 Ranking <span>SimuladoTop</span></h1>
+        <p>Confira os melhores desempenhos do período e acompanhe sua posição entre os aprovados.</p>
+      </div>
+      <div class="period-badge" id="period-badge">Esta Semana</div>
+    </div>
+
+    <!-- abas -->
+    <div class="period-tabs">
+      <button class="period-button active" data-period="week">Esta Semana</button>
+      <button class="period-button" data-period="month">Este Mês</button>
+      <button class="period-button" data-period="year">Este Ano</button>
+    </div>
+
+    <!-- stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="val" id="summary-total">–</div>
+        <div class="lbl">Jogadores no período</div>
+      </div>
+      <div class="stat-card">
+        <div class="val" id="summary-best">–</div>
+        <div class="lbl">Maior pontuação</div>
+      </div>
+      <div class="stat-card">
+        <div class="val" id="summary-average">–</div>
+        <div class="lbl">Média de acerto</div>
+      </div>
+      <div class="stat-card">
+        <div class="val" id="summary-time">–</div>
+        <div class="lbl">Tempo médio</div>
+      </div>
+    </div>
+
+    <!-- body: lista + sidebar -->
+    <div class="rank-body">
+
+      <!-- lista principal -->
+      <div>
+        <div id="ranking-content">
+          <div class="loading-box"><div class="spinner"></div></div>
+        </div>
+      </div>
+
+      <!-- sidebar -->
+      <aside class="rank-aside">
+
+        <div class="aside-card">
+          <h3>Sua posição</h3>
+          <div class="my-pos-box">
+            <div class="my-pos-avatar" id="user-avatar">?</div>
+            <div class="my-pos-info">
+              <div class="name" id="user-name">Carregando...</div>
+              <div class="status" id="user-status">–</div>
+            </div>
+            <div class="my-pos-nums">
+              <span class="rank-num" id="user-rank">–</span>
+              <span class="pts-num"><span id="user-points">0</span> pts</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="aside-card">
+          <h3>Top 3 do período</h3>
+          <div id="top3-sidebar">
+            <div class="loading-box" style="padding:20px 0"><div class="spinner"></div></div>
+          </div>
+          <p class="rank-note">🏅 Ranking atualizado em tempo real. Empate desfeito pelo menor tempo total.</p>
+        </div>
+
+      </aside>
+    </div>
+
+  </main>
+
+  <!-- ═══ FOOTER PADRÃO DO SITE ═══ -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <span class="logo-text">Simulado<span class="logo-highlight">Top</span></span>
+      </div>
+      <div class="footer-nav">
+        <a href="sobre.html">Sobre</a>
+        <a href="privacidade.html">Privacidade</a>
+        <a href="termos.html">Termos de Uso</a>
+      </div>
+      <hr class="footer-line">
+      <div class="footer-info">
+        <p class="footer-text">Este site não possui vínculo com as instituições organizadoras dos concursos e vestibulares citados.</p>
+        <p class="footer-text">© 2026 SimuladoTop — Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══ LÓGICA DE RANKING ═══ -->
+  <!-- Aguarda o window._supabase ser definido pelo auth.js antes de rodar -->
+  <script defer src="js/ranking.js"></script>
+
+</body>
+</html>

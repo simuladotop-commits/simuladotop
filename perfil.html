@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meu Perfil — SimuladoTop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  
+  <!-- ═══ AUTENTICAÇÃO - Carregado no head com defer ═══ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/auth-check.js" defer></script>
+  
+  <style>
+    /* UNIFICAÇÃO COM O PADRÃO DA HOME */
+    .site-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px; /* Alinhado com o padding da home */
+    }
+    .perfil-header {
+      padding: 52px 0 40px; /* Alinhado com o padding do hero da home */
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .perfil-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-family: var(--font-head);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .perfil-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .perfil-welcome h1 {
+      font-family: var(--font-head);
+      font-size: clamp(2.2rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.1;
+    }
+    .perfil-welcome p {
+      color: var(--muted);
+      font-size: 0.97rem;
+      line-height: 1.65;
+      max-width: 600px;
+    }
+
+    /* Dashboard Grid — Mesma proporção dos cards da Home */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      align-items: stretch;
+      margin-bottom: 40px;
+    }
+
+    .resumo-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 20px; /* Mesmo padding dos cards da home */
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color .2s, transform .2s;
+    }
+    .resumo-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    
+    .resumo-label {
+      font-size: .72rem; /* Mesmo tamanho do .stat-label da home */
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .resumo-value {
+      font-family: var(--font-head);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* Histórico — Alinhado com o container principal */
+    .historico-section {
+      grid-column: 1 / -1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 40px;
+    }
+    .historico-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .historico-header h2 {
+      font-family: var(--font-head);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .filtros {
+      display: flex;
+      gap: 10px;
+    }
+    .btn-filter {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-filter:hover, .btn-filter.active {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+    .btn-filter.active {
+      background: var(--accent-glow);
+    }
+
+    /* Tabela/Lista — Alinhamento Perfeito via Grid */
+    .historico-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+    }
+    .historico-row.head {
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .historico-row:last-child {
+      border-bottom: none;
+    }
+    .simulado-nome {
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 300px;
+    }
+    .simulado-data {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    .simulado-nota {
+      font-family: var(--font-head);
+      font-weight: 700;
+      text-align: right;
+    }
+    .empty-state {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 400;
+      font-style: italic;
+    }
+    .nota-high { color: var(--correct); }
+    .nota-mid { color: var(--accent); }
+    .nota-low { color: var(--wrong); }
+
+    @media (max-width: 1000px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .perfil-header { flex-direction: column; text-align: center; padding: 40px 18px; }
+    }
+
+    @media (max-width: 640px) {
+      .historico-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .historico-row.head { display: none; }
+      .simulado-nome { grid-column: span 2; }
+      .simulado-nota { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="index.html">Simulado<span>Top</span></a>
+    <div class="header-nav">
+      <a href="index.html">Início</a>
+      <a href="ranking.html">Ranking</a>
+      <a href="blog.html">Blog</a>
+      <div id="auth-container" class="auth-actions" aria-label="Ações de autenticação"></div>
+    </div>
+  </div>
+</header>
+
+<div class="site-wrap">
+  <div class="perfil-header">
+    <div class="perfil-avatar" id="user-avatar-container">
+      <span id="user-initials">U</span>
+    </div>
+    <div class="perfil-welcome">
+      <h1 id="perfil-greeting">Carregando...</h1>
+      <p id="perfil-stats-summary">Acompanhe seu desempenho e evolução nos estudos.</p>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="resumo-card">
+      <span class="resumo-label">Simulados Concluídos</span>
+      <span class="resumo-value" id="stat-concluidos">0</span>
+    </div>
+    <div class="resumo-card">
+      <span class="resumo-label">Média Geral de Acertos</span>
+      <span class="resumo-value" id="stat-media">0%</span>
+    </div>
+    <div class="resumo-card">
+      <span class="resumo-label">Pontos no Ranking</span>
+      <span class="resumo-value" id="stat-pontos">0</span>
+    </div>
+
+    <div class="historico-section">
+    <div class="historico-header">
+      <h2>Histórico de Atividades</h2>
+      <div class="filtros">
+        <button class="btn-filter active" onclick="filtrarHistorico('tudo', this)">Tudo</button>
+        <button class="btn-filter" onclick="filtrarHistorico('semana', this)">Esta Semana</button>
+        <button class="btn-filter" onclick="filtrarHistorico('mes', this)">Este Mês</button>
+      </div>
+    </div>
+
+    <div id="historico-container">
+      <div class="historico-row head">
+        <span>Simulado</span>
+        <span>Data</span>
+        <span style="text-align: right;">Nota</span>
+      </div>
+      <div id="historico-list-items">
+        <!-- Itens carregados via JS -->
+        <p style="padding: 20px; text-align: center; color: var(--muted);">Buscando seu histórico...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-container">
+    <div class="footer-brand">
+      <span class="logo-text">Simulado<span class="logo-highlight">Top</span></span>
+    </div>
+
+    <div class="footer-nav">
+      <a href="sobre.html">Sobre</a>
+      <a href="privacidade.html">Privacidade</a>
+      <a href="termos.html">Termos de Uso</a>
+    </div>
+
+    <hr class="footer-line">
+
+    <div class="footer-info">
+      <p class="footer-text">Este site não possui vínculo com as instituições organizadoras dos concursos e vestibulares citados. As questões são baseadas em provas anteriores de domínio público.</p>
+      <p class="footer-text">© 2026 SimuladoTop — Todos os direitos reservados.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/perfil.js"></script>
+
+</body>
+</html>
+
+
