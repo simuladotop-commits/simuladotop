@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin-dashboard.html
+Disallow: /admin-alunos.html
+Disallow: /admin-blog.html
+Disallow: /perfil.html
+
+Sitemap: https://simuladotop.netlify.app/sitemap.xml
