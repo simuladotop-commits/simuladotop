@@ -2126,3 +2126,105 @@ header { overflow: visible !important; }
 .header-nav { overflow: visible !important; }
 .auth-actions { overflow: visible !important; }
 .user-menu { overflow: visible !important; }
+
+/* === Review Cards (Questões para Revisar) === */
+#error-report {
+  overflow: visible !important;
+  max-height: none !important;
+}
+
+.review-card {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: var(--radius-md, 10px);
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+
+.review-card:hover {
+  border-color: #3a3a3a;
+}
+
+.review-header {
+  margin-bottom: 10px;
+}
+
+.review-numero {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #f5a623;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.review-enunciado {
+  color: #e5e5e5;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.review-respostas {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.review-linha {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.85rem;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.review-linha.errada {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.review-linha.correta {
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.review-label {
+  color: #888;
+  white-space: nowrap;
+  font-weight: 600;
+  min-width: 120px;
+}
+
+.review-linha.errada .review-valor { color: #ef4444; }
+.review-linha.correta .review-valor { color: #22c55e; }
+
+.review-btn-explicacao {
+  background: none;
+  border: 1px solid #2a2a2a;
+  color: #f5a623;
+  font-size: 0.82rem;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  margin-bottom: 0;
+}
+
+.review-btn-explicacao:hover {
+  background: rgba(245, 166, 35, 0.08);
+  border-color: rgba(245, 166, 35, 0.4);
+}
+
+.review-explicacao {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: #aaa;
+  background: #111;
+  border-left: 3px solid #f5a623;
+  padding: 12px 16px;
+  border-radius: 0 6px 6px 0;
+  line-height: 1.7;
+}
