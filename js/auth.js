@@ -2,11 +2,6 @@
 const SUPABASE_URL = 'https://nkvobcmogwzrbanqofio.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rdm9iY21vZ3d6cmJhbnFvZmlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMzAxNjgsImV4cCI6MjA5NDkwNjE2OH0.qzD0utvl6Gmewzz2a0CLD_9OpOSN2SVaqw08EaK6YoU';
 
-/**
- * Inicializa o cliente Supabase de forma segura.
- * Se já existir uma instância global 'supabase', nós a usamos para evitar conflitos,
- * mas garantimos que a nossa variável interna '_supabase' esteja configurada.
- */
 let _supabase;
 try {
   if (typeof supabase !== 'undefined' && typeof supabase.createClient === 'function') {
@@ -25,7 +20,6 @@ try {
  */
 async function registrarUsuario(email, password, nome) {
   try {
-    // Tratamento de nome: se vazio ou se for um e-mail, usa "Usuário"
     let nomeReal = (nome && nome.trim() !== "" && !nome.includes('@')) ? nome.trim() : "Usuário";
 
     const { data, error } = await _supabase.auth.signUp({
@@ -43,19 +37,17 @@ async function registrarUsuario(email, password, nome) {
       throw error;
     }
 
+    // ✅ FIX 1: __AUTH_STATE definido fora do if, independente do updateHeaderAuth
     if (data.user) {
       console.log("Usuário criado, inserindo na tabela perfis...");
-      // Salva apenas no campo full_name, garantindo que o e-mail não seja usado como nome
       const { error: profileError } = await _supabase
         .from('perfis')
-        .insert([
-          { 
-            id: data.user.id, 
-            full_name: nomeReal, 
-            email: email, 
-            pontos: 0 
-          }
-        ]);
+        .insert([{ 
+          id: data.user.id, 
+          full_name: nomeReal, 
+          email: email, 
+          pontos: 0 
+        }]);
       
       if (profileError) {
         console.error("Erro ao inserir na tabela 'perfis':", profileError);
@@ -63,14 +55,16 @@ async function registrarUsuario(email, password, nome) {
         console.log("Perfil criado na tabela 'perfis' com sucesso.");
       }
 
-      // ✅ SINCRONIZAR HEADER COM NOVO ESTADO DE AUTENTICAÇÃO
+      // Define __AUTH_STATE sempre, independente do header
+      window.__AUTH_STATE = {
+        session: data.session,
+        user: data.user,
+        isReady: true
+      };
+
+      // Sincroniza header se disponível
       if (typeof window.updateHeaderAuth === 'function') {
         window.updateHeaderAuth(data.user);
-        window.__AUTH_STATE = {
-          session: data.session,
-          user: data.user,
-          isReady: true
-        };
       }
     }
 
@@ -96,7 +90,6 @@ async function loginUsuario(email, password) {
       throw error;
     }
 
-    // Lógica de sincronização no login: garante que o perfil exista na tabela 'perfis'
     if (data.user) {
       const { data: perfilExistente } = await _supabase
         .from('perfis')
@@ -118,14 +111,14 @@ async function loginUsuario(email, password) {
         }]);
       }
 
-      // ✅ SINCRONIZAR HEADER COM NOVO ESTADO DE AUTENTICAÇÃO
+      window.__AUTH_STATE = {
+        session: data.session,
+        user: data.user,
+        isReady: true
+      };
+
       if (typeof window.updateHeaderAuth === 'function') {
         window.updateHeaderAuth(data.user);
-        window.__AUTH_STATE = {
-          session: data.session,
-          user: data.user,
-          isReady: true
-        };
       }
     }
 
@@ -160,11 +153,15 @@ async function loginComGoogle() {
 }
 
 /**
- * Recuperação de senha via Supabase
+ * ✅ FIX 2: Apenas UMA declaração de recuperarSenha (duplicata removida)
  */
 async function recuperarSenha(email) {
   try {
     if (!_supabase) throw new Error('Serviço de autenticação indisponível.');
+    if (!email) {
+      alert("Por favor, digite seu e-mail antes de solicitar recuperação.");
+      return;
+    }
     const { data, error } = await _supabase.auth.resetPasswordForEmail(email, {
       redirectTo: window.location.origin + '/atualizar-senha.html'
     });
@@ -188,7 +185,6 @@ async function obterUsuarioAtual() {
       return null;
     }
 
-    // ✅ SINCRONIZAR HEADER AO OBTER USUÁRIO (importante para páginas que carregam depois do header)
     if (user && typeof window.updateHeaderAuth === 'function' && window.__AUTH_STATE?.isReady) {
       window.updateHeaderAuth(user);
     }
@@ -235,11 +231,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let isLoginMode = true;
 
-  // Função para mudar o estado da tela
   function atualizarInterface() {
-    if (!authTitle || !authSubtitle || !btnSubmit || !footerText || !toggleAuth || !authMessage) {
-      return;
-    }
+    if (!authTitle || !authSubtitle || !btnSubmit || !footerText || !toggleAuth || !authMessage) return;
 
     if (isLoginMode) {
       authTitle.innerText = 'Bem-vindo de volta';
@@ -258,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (groupName) groupName.style.display = 'flex';
       if (inputName) inputName.required = true;
     }
-    // Atualiza o texto do botão Google sem alterar estilo ou ícone
+
     if (btnGoogle) {
       try {
         const img = btnGoogle.querySelector('img');
@@ -272,17 +265,14 @@ document.addEventListener('DOMContentLoaded', () => {
     authMessage.style.display = 'none';
   }
 
-  // Alternar entre Login e Cadastro
   if (toggleAuth) {
     toggleAuth.onclick = (e) => {
       e.preventDefault();
-      console.log("Alternando modo de autenticação...");
       isLoginMode = !isLoginMode;
       atualizarInterface();
     };
   }
 
-  // Define o estado inicial da interface (garante texto do botão Google correto)
   atualizarInterface();
 
   const urlParams = new URLSearchParams(window.location.search);
@@ -292,7 +282,6 @@ document.addEventListener('DOMContentLoaded', () => {
     authMessage.style.display = 'block';
   }
 
-  // Submissão do Formulário
   if (loginForm) {
     loginForm.onsubmit = async (e) => {
       e.preventDefault();
@@ -301,7 +290,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const nome = inputName ? inputName.value : '';
 
       btnSubmit.disabled = true;
-      const originalText = btnSubmit.innerText;
       btnSubmit.innerText = 'Processando...';
       authMessage.style.display = 'none';
 
@@ -311,12 +299,29 @@ document.addEventListener('DOMContentLoaded', () => {
           showMessage('Login realizado com sucesso! Redirecionando...', 'success');
           setTimeout(() => window.location.href = 'index.html', 1500);
         } else {
-          await registrarUsuario(email, password, nome);
-          showMessage('Conta criada! Verifique seu e-mail para confirmar o cadastro.', 'success');
+          const data = await registrarUsuario(email, password, nome);
+
+          // ✅ FIX 3: Mensagem diferente dependendo se confirmação de e-mail é exigida
+          if (data.user && data.session) {
+            // Confirmação de e-mail desativada no Supabase — usuário já está logado
+            showMessage('Conta criada com sucesso! Redirecionando...', 'success');
+            setTimeout(() => window.location.href = 'index.html', 1500);
+          } else {
+            // Confirmação de e-mail ativada — orienta o usuário
+            showMessage('✅ Cadastro realizado! Verifique seu e-mail e clique no link de confirmação para ativar sua conta.', 'success');
+          }
         }
       } catch (error) {
         console.error('Erro na autenticação:', error);
-        showMessage(error.message || 'Ocorreu um erro ao processar sua solicitação.', 'error');
+
+        // ✅ FIX 3b: Mensagens de erro traduzidas e legíveis
+        let msg = error.message || 'Ocorreu um erro ao processar sua solicitação.';
+        if (msg.includes('User already registered')) msg = 'Este e-mail já está cadastrado. Tente fazer login.';
+        if (msg.includes('Invalid login credentials')) msg = 'E-mail ou senha incorretos.';
+        if (msg.includes('Email not confirmed')) msg = 'E-mail não confirmado. Verifique sua caixa de entrada.';
+        if (msg.includes('Password should be at least')) msg = 'A senha deve ter pelo menos 6 caracteres.';
+
+        showMessage(msg, 'error');
       } finally {
         btnSubmit.disabled = false;
         btnSubmit.innerText = isLoginMode ? 'Entrar' : 'Registrar';
@@ -324,7 +329,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
-  // Clique no botão Google
   if (btnGoogle) {
     btnGoogle.onclick = async () => {
       try {
@@ -335,7 +339,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
-  // Link "Esqueci minha senha" -> solicita recuperação
   const forgotLink = document.getElementById('forgot-password-link');
   if (forgotLink) {
     forgotLink.onclick = async (e) => {
@@ -350,7 +353,6 @@ document.addEventListener('DOMContentLoaded', () => {
         await recuperarSenha(email);
         showMessage('E-mail de recuperação enviado! Verifique sua caixa de entrada.', 'success');
       } catch (err) {
-        console.error('Erro ao enviar recuperação:', err);
         showMessage('Erro ao enviar e-mail de recuperação: ' + (err.message || err), 'error');
       }
     };
@@ -365,7 +367,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function obterNomeExibicao(user) {
   const metadata = user?.user_metadata || {};
-  // Prioriza full_name, se não houver, retorna null para indicar que não deve exibir nome
   const name = (metadata.full_name || metadata.display_name || '').trim();
   if (name && !name.includes('@')) return name;
   return null;
@@ -378,36 +379,23 @@ function obterInicialNome(nome) {
 
 function montarAvatarHTML(avatarUrl, nome) {
   const inicial = obterInicialNome(nome);
-  if (!avatarUrl) {
-    return inicial;
-  }
-
+  if (!avatarUrl) return inicial;
   return `<img src="${avatarUrl}" alt="Avatar" onerror="this.replaceWith(document.createTextNode('${inicial}'))" />`;
 }
 
 function atualizarHeaderUser(nome, avatarUrl) {
   const avatarEl = document.querySelector('.user-menu .avatar, .btn-login .avatar, .avatar');
   const userNameEl = document.querySelector('.user-menu .user-name, .btn-login .user-name');
-
-  if (avatarEl) {
-    avatarEl.innerHTML = montarAvatarHTML(avatarUrl, nome);
-  }
-
-  if (userNameEl) {
-    userNameEl.textContent = nome || 'Olá!';
-  }
+  if (avatarEl) avatarEl.innerHTML = montarAvatarHTML(avatarUrl, nome);
+  if (userNameEl) userNameEl.textContent = nome || 'Olá!';
 }
 
-/**
- * LÓGICA GLOBAL DE CABEÇALHO (Executa em todas as páginas)
- */
 async function atualizarInterfaceGlobal() {
   const user = await obterUsuarioAtual();
   const btnLogin = document.querySelector('.btn-login');
   const rkFooter = document.querySelector('.rk-footer');
 
   if (user && btnLogin) {
-    // Tenta buscar o full_name da tabela perfis se não estiver no metadata
     let displayName = obterNomeExibicao(user);
     const avatarUrl = user.user_metadata?.avatar_url || '';
 
@@ -441,7 +429,6 @@ async function atualizarInterfaceGlobal() {
     btnLogin.replaceWith(userMenu);
     atualizarHeaderUser(displayName, avatarUrl);
 
-    // Lógica de dropdown por clique
     const menuBtn = userMenu.querySelector('.btn-login');
     if (menuBtn) {
       menuBtn.addEventListener('click', (e) => {
@@ -450,164 +437,114 @@ async function atualizarInterfaceGlobal() {
       });
     }
 
-    // Fechar dropdown ao clicar fora
     document.addEventListener('click', (e) => {
-      if (!userMenu.contains(e.target)) {
-        userMenu.classList.remove('active');
-      }
+      if (!userMenu.contains(e.target)) userMenu.classList.remove('active');
     });
 
     const logoutBtn = document.getElementById('btn-logout-global');
     if (logoutBtn) {
       logoutBtn.onclick = async (e) => {
         e.preventDefault();
-        if(confirm("Deseja realmente sair?")) {
-          await logoutUsuario();
-        }
+        if (confirm("Deseja realmente sair?")) await logoutUsuario();
       };
     }
 
-    if (rkFooter) {
-      rkFooter.style.display = 'none';
-    }
+    if (rkFooter) rkFooter.style.display = 'none';
   }
 }
 
-// Executa a checagem global ao carregar qualquer página
-// Removido para evitar conflito com auth-check.js
-// if (document.readyState === 'loading') {
-//   document.addEventListener('DOMContentLoaded', atualizarInterfaceGlobal);
-// } else {
-//   atualizarInterfaceGlobal();
-// }
-
-// =================================================================
-// RECUPERAÇÃO DE SENHA (SUPABASE)
-// =================================================================
-
-// Função para disparar o e-mail de recuperação de senha pelo Supabase
-async function recuperarSenha(email) {
-    if (!email) {
-        alert("Por favor, digite seu e-mail no campo antes de clicar em esqueci minha senha.");
-        return;
-    }
-
-    try {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: window.location.origin + '/atualizar-senha.html',
-        });
-
-        if (error) {
-            alert("Erro ao enviar e-mail de recuperação: " + error.message);
-        } else {
-            alert("E-mail de recuperação enviado com sucesso! Verifique sua caixa de entrada.");
-        }
-    } catch (err) {
-        alert("Erro inesperado no sistema: " + err.message);
-    }
-}
-
 function initMobileHeaderMenu() {
-    const headerInner = document.querySelector('.header-inner');
-    const headerNav = document.querySelector('.header-inner .header-nav');
-    if (!headerInner || !headerNav) return;
-    if (headerInner.querySelector('.mobile-nav-toggle')) return;
+  const headerInner = document.querySelector('.header-inner');
+  const headerNav = document.querySelector('.header-inner .header-nav');
+  if (!headerInner || !headerNav) return;
+  if (headerInner.querySelector('.mobile-nav-toggle')) return;
 
-    const isHomePage = document.querySelector('header.home-header') !== null;
-    if (isHomePage) return;
+  const isHomePage = document.querySelector('header.home-header') !== null;
+  if (isHomePage) return;
 
-    const toggle = document.createElement('button');
-    toggle.type = 'button';
-    toggle.className = 'mobile-nav-toggle';
-    toggle.setAttribute('aria-expanded', 'false');
-    toggle.setAttribute('aria-label', 'Abrir menu');
-    toggle.textContent = '☰';
+  const toggle = document.createElement('button');
+  toggle.type = 'button';
+  toggle.className = 'mobile-nav-toggle';
+  toggle.setAttribute('aria-expanded', 'false');
+  toggle.setAttribute('aria-label', 'Abrir menu');
+  toggle.textContent = '☰';
 
-    const isAdminPage = document.body.classList.contains('admin-dashboard');
+  const isAdminPage = document.body.classList.contains('admin-dashboard');
 
-    if (isAdminPage) {
-        const overlay = document.createElement('div');
-        overlay.className = 'ad-sidebar-overlay';
-        overlay.addEventListener('click', () => {
-            document.querySelectorAll('.ad-sidebar.open').forEach(sidebar => sidebar.classList.remove('open'));
-            overlay.classList.remove('active');
-            toggle.setAttribute('aria-expanded', 'false');
-        });
-        document.body.appendChild(overlay);
+  if (isAdminPage) {
+    const overlay = document.createElement('div');
+    overlay.className = 'ad-sidebar-overlay';
+    overlay.addEventListener('click', () => {
+      document.querySelectorAll('.ad-sidebar.open').forEach(s => s.classList.remove('open'));
+      overlay.classList.remove('active');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+    document.body.appendChild(overlay);
 
-        const closeSidebar = () => {
-            const sidebar = document.querySelector('.ad-sidebar');
-            if (sidebar) sidebar.classList.remove('open');
-            overlay.classList.remove('active');
-            toggle.setAttribute('aria-expanded', 'false');
-        };
+    const closeSidebar = () => {
+      const sidebar = document.querySelector('.ad-sidebar');
+      if (sidebar) sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+      toggle.setAttribute('aria-expanded', 'false');
+    };
 
-        const openSidebar = () => {
-            const sidebar = document.querySelector('.ad-sidebar');
-            if (sidebar) sidebar.classList.add('open');
-            overlay.classList.add('active');
-            toggle.setAttribute('aria-expanded', 'true');
-        };
+    const openSidebar = () => {
+      const sidebar = document.querySelector('.ad-sidebar');
+      if (sidebar) sidebar.classList.add('open');
+      overlay.classList.add('active');
+      toggle.setAttribute('aria-expanded', 'true');
+    };
 
-        toggle.addEventListener('click', (event) => {
-            event.stopPropagation();
-            const sidebar = document.querySelector('.ad-sidebar');
-            if (!sidebar) return;
-            if (sidebar.classList.contains('open')) {
-                closeSidebar();
-            } else {
-                openSidebar();
-            }
-        });
+    toggle.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const sidebar = document.querySelector('.ad-sidebar');
+      if (!sidebar) return;
+      sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+    });
 
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') closeSidebar();
-        });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeSidebar();
+    });
 
-        document.addEventListener('click', (event) => {
-            const sidebar = document.querySelector('.ad-sidebar');
-            if (!sidebar || !sidebar.classList.contains('open')) return;
-            if (overlay.contains(event.target) || toggle.contains(event.target)) return;
-            if (!sidebar.contains(event.target)) closeSidebar();
-        });
-    } else {
-        toggle.addEventListener('click', (event) => {
-            event.stopPropagation();
-            const isOpen = headerNav.classList.toggle('mobile-open');
-            toggle.setAttribute('aria-expanded', String(isOpen));
-        });
+    document.addEventListener('click', (event) => {
+      const sidebar = document.querySelector('.ad-sidebar');
+      if (!sidebar || !sidebar.classList.contains('open')) return;
+      if (overlay.contains(event.target) || toggle.contains(event.target)) return;
+      if (!sidebar.contains(event.target)) closeSidebar();
+    });
+  } else {
+    toggle.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const isOpen = headerNav.classList.toggle('mobile-open');
+      toggle.setAttribute('aria-expanded', String(isOpen));
+    });
 
-        document.addEventListener('click', (event) => {
-            if (!headerNav.contains(event.target) && !toggle.contains(event.target)) {
-                if (headerNav.classList.contains('mobile-open')) {
-                    headerNav.classList.remove('mobile-open');
-                    toggle.setAttribute('aria-expanded', 'false');
-                }
-            }
-        });
-    }
+    document.addEventListener('click', (event) => {
+      if (!headerNav.contains(event.target) && !toggle.contains(event.target)) {
+        if (headerNav.classList.contains('mobile-open')) {
+          headerNav.classList.remove('mobile-open');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      }
+    });
+  }
 
-    headerInner.insertBefore(toggle, headerNav);
+  headerInner.insertBefore(toggle, headerNav);
 }
 
-// Vincula o link do HTML à função de recuperação
 document.addEventListener("DOMContentLoaded", () => {
-    initMobileHeaderMenu();
-    // Escuta o clique se o link existir na página atual (login.html)
-    const linkEsqueci = document.getElementById("esqueci-senha");
-    
-    if (linkEsqueci) {
-        linkEsqueci.addEventListener("click", (e) => {
-            e.preventDefault();
-            
-            // Tenta buscar o campo de email pelo ID ou Name comum
-            const campoEmail = document.getElementById("email") || document.querySelector('input[type="email"]');
-            
-            if (campoEmail && campoEmail.value) {
-                recuperarSenha(campoEmail.value);
-            } else {
-                alert("Por favor, digite seu e-mail no campo de texto antes de clicar em esqueci minha senha.");
-            }
-        });
-    }
+  initMobileHeaderMenu();
+
+  const linkEsqueci = document.getElementById("esqueci-senha");
+  if (linkEsqueci) {
+    linkEsqueci.addEventListener("click", (e) => {
+      e.preventDefault();
+      const campoEmail = document.getElementById("email") || document.querySelector('input[type="email"]');
+      if (campoEmail && campoEmail.value) {
+        recuperarSenha(campoEmail.value);
+      } else {
+        alert("Por favor, digite seu e-mail antes de clicar em esqueci minha senha.");
+      }
+    });
+  }
 });
