@@ -8,11 +8,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
-  
-  <!-- ═══ AUTENTICAÇÃO - Carregado no head com defer ═══ -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-  <script src="js/auth.js" defer></script>
-  <script src="js/auth-check.js" defer></script>
 
   <style>
     .auth-container {
@@ -89,9 +84,7 @@
       margin-top: 8px;
     }
 
-    .btn-auth:hover {
-      opacity: 0.9;
-    }
+    .btn-auth:hover { opacity: 0.9; }
 
     .auth-divider {
       display: flex;
@@ -137,10 +130,7 @@
       border-color: var(--muted);
     }
 
-    .btn-google img {
-      width: 18px;
-      height: 18px;
-    }
+    .btn-google img { width: 18px; height: 18px; }
 
     .auth-footer {
       margin-top: 24px;
@@ -154,9 +144,7 @@
       font-weight: 600;
     }
 
-    .auth-footer a:hover {
-      text-decoration: underline;
-    }
+    .auth-footer a:hover { text-decoration: underline; }
 
     #auth-message {
       margin-top: 16px;
@@ -177,16 +165,16 @@
       color: var(--correct);
       border: 1px solid var(--correct);
     }
-    /* Quando o campo de nome estiver escondido (Modo Login), o link aparece */
-#login-form #group-name[style*="display: none"] ~ #recuperar-senha-container {
-    display: block !important;
-}
 
-/* Quando o campo de nome estiver visível (Modo Cadastro), o link some */
-#login-form #group-name:not([style*="display: none"]) ~ #recuperar-senha-container {
-    display: none !important;
-}
+    /* Mostra link "esqueci" só no modo login */
+    #login-form #group-name[style*="display: none"] ~ #recuperar-senha-container {
+      display: block !important;
+    }
+    #login-form #group-name:not([style*="display: none"]) ~ #recuperar-senha-container {
+      display: none !important;
+    }
   </style>
+
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-T45ZPB8YTH"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -202,7 +190,7 @@
     <a class="logo" href="index.html">Simulado<span>Top</span></a>
     <div class="header-nav">
       <a href="index.html">Início</a>
-    <a href="ranking.html">Ranking</a>
+      <a href="ranking.html">Ranking</a>
       <a href="blog.html">Blog</a>
       <div id="auth-container" class="auth-actions" aria-label="Ações de autenticação"></div>
     </div>
@@ -221,34 +209,34 @@
         <label for="name">Nome Completo</label>
         <input type="text" id="name" placeholder="Seu nome" />
       </div>
+
       <div class="form-group">
         <label for="email">E-mail</label>
         <input type="email" id="email" placeholder="seu@email.com" required />
       </div>
+
       <div class="form-group">
         <label for="password">Senha</label>
         <input type="password" id="password" placeholder="••••••••" required />
       </div>
-      
-     <div id="recuperar-senha-container" style="text-align: center; margin: 15px 0 25px 0;">
-    <a href="#" id="forgot-password-link" style="font-size: .9rem; color: var(--accent); text-decoration: none; font-weight: 500;">Esqueci minha senha</a>
-</div>
 
-<button type="submit" class="btn-auth" id="btn-submit">Entrar</button>
+      <div id="recuperar-senha-container" style="text-align: center; margin: 15px 0 25px 0;">
+        <a href="#" id="forgot-password-link" style="font-size: .9rem; color: var(--accent); text-decoration: none; font-weight: 500;">Esqueci minha senha</a>
+      </div>
 
-<div id="auth-message"></div>
-</form>
+      <button type="submit" class="btn-auth" id="btn-submit">Entrar</button>
 
-<div class="auth-divider">
-    <span>ou</span>
-</div>
+      <div id="auth-message"></div>
+    </form>
 
-<div style="display: flex; justify-content: center; width: 100%;">
-    <button class="btn-google" id="btn-google" style="margin: 0 auto;">
+    <div class="auth-divider"><span>ou</span></div>
+
+    <div style="display: flex; justify-content: center; width: 100%;">
+      <button class="btn-google" id="btn-google" style="margin: 0 auto;">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" />
         Entrar com o Google
-    </button>
-</div>
+      </button>
+    </div>
 
     <div class="auth-footer">
       <span id="footer-text">Não tem uma conta?</span>
@@ -262,15 +250,12 @@
     <div class="footer-brand">
       <span class="logo-text">Simulado<span class="logo-highlight">Top</span></span>
     </div>
-
     <div class="footer-nav">
       <a href="sobre.html">Sobre</a>
       <a href="privacidade.html">Privacidade</a>
       <a href="termos.html">Termos de Uso</a>
     </div>
-
     <hr class="footer-line">
-
     <div class="footer-info">
       <p class="footer-text">Este site não possui vínculo com as instituições organizadoras dos concursos e vestibulares citados. As questões são baseadas em provas anteriores de domínio público.</p>
       <p class="footer-text">© 2026 SimuladoTop — Todos os direitos reservados.</p>
@@ -278,7 +263,10 @@
   </div>
 </footer>
 
+<!-- ✅ SCRIPTS NO FINAL DO BODY — garante que o DOM existe quando os scripts rodam -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+<script src="js/auth-check.js"></script>
+
 </body>
 </html>
-
-
