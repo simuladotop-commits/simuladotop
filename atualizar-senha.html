@@ -19,32 +19,27 @@
       border-radius: var(--radius);
       text-align: center;
     }
-
     .auth-header h1 {
       font-family: var(--font-head);
       font-size: 2rem;
       margin-bottom: 8px;
     }
-
     .auth-header p {
       color: var(--muted);
       font-size: 0.9rem;
       margin-bottom: 24px;
     }
-
     .auth-form {
       display: flex;
       flex-direction: column;
       gap: 16px;
       text-align: left;
     }
-
     .form-group {
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
-
     .form-group label {
       font-size: 0.85rem;
       font-weight: 600;
@@ -52,7 +47,6 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
-
     .form-group input {
       background: var(--bg);
       border: 1px solid var(--border);
@@ -63,12 +57,10 @@
       transition: border-color 0.2s;
       width: 100%;
     }
-
     .form-group input:focus {
       outline: none;
       border-color: var(--accent);
     }
-
     .btn-auth {
       background: var(--accent);
       color: #0d0f14;
@@ -85,10 +77,8 @@
       margin-top: 8px;
       width: 100%;
     }
-
     .btn-auth:hover { opacity: 0.9; }
     .btn-auth:disabled { opacity: 0.5; cursor: not-allowed; }
-
     #auth-message {
       margin-top: 16px;
       font-size: 0.85rem;
@@ -96,33 +86,27 @@
       border-radius: 6px;
       display: none;
     }
-
     .msg-error {
       background: rgba(239, 68, 68, 0.1);
       color: var(--wrong);
       border: 1px solid var(--wrong);
     }
-
     .msg-success {
       background: rgba(34, 197, 94, 0.1);
       color: var(--correct);
       border: 1px solid var(--correct);
     }
-
     .auth-footer {
       margin-top: 24px;
       font-size: 0.9rem;
       color: var(--muted);
     }
-
     .auth-footer a {
       color: var(--accent);
       text-decoration: none;
       font-weight: 600;
     }
-
     .auth-footer a:hover { text-decoration: underline; }
-
     .loading-state {
       text-align: center;
       padding: 40px 0;
@@ -155,23 +139,20 @@
 <div class="page-wrap">
   <div class="auth-container">
 
-    <!-- Estado: carregando token -->
     <div id="loading-state" class="loading-state">
       <p>Verificando link de recuperação...</p>
     </div>
 
-    <!-- Estado: token inválido ou expirado -->
     <div id="invalid-state" style="display: none;">
       <div class="auth-header">
         <h1>Link inválido</h1>
-        <p>Este link de recuperação expirou ou já foi utilizado. Solicite um novo.</p>
+        <p>Este link de recuperação expirou ou já foi utilizado. Solicite um novo na página de login.</p>
       </div>
       <div class="auth-footer">
         <a href="login.html">← Voltar para o login</a>
       </div>
     </div>
 
-    <!-- Estado: formulário de nova senha -->
     <div id="form-state" style="display: none;">
       <div class="auth-header">
         <h1>Nova Senha</h1>
@@ -183,12 +164,10 @@
           <label for="password">Nova Senha</label>
           <input type="password" id="password" placeholder="Mínimo 6 caracteres" required minlength="6" />
         </div>
-
         <div class="form-group">
           <label for="password-confirm">Confirmar Senha</label>
           <input type="password" id="password-confirm" placeholder="Repita a senha" required minlength="6" />
         </div>
-
         <button type="submit" class="btn-auth" id="btn-submit">Atualizar Senha</button>
         <div id="auth-message"></div>
       </form>
@@ -198,11 +177,10 @@
       </div>
     </div>
 
-    <!-- Estado: sucesso -->
     <div id="success-state" style="display: none;">
       <div class="auth-header">
         <h1>Senha atualizada!</h1>
-        <p>Sua senha foi alterada com sucesso. Você já pode fazer login.</p>
+        <p>Sua senha foi alterada com sucesso. Redirecionando para o login...</p>
       </div>
       <div class="auth-footer">
         <a href="login.html">Ir para o login →</a>
@@ -239,13 +217,13 @@
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rdm9iY21vZ3d6cmJhbnFvZmlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMzAxNjgsImV4cCI6MjA5NDkwNjE2OH0.qzD0utvl6Gmewzz2a0CLD_9OpOSN2SVaqw08EaK6YoU';
 
   document.addEventListener('DOMContentLoaded', async () => {
-    const loadingEl  = document.getElementById('loading-state');
-    const invalidEl  = document.getElementById('invalid-state');
-    const formEl     = document.getElementById('form-state');
-    const successEl  = document.getElementById('success-state');
-    const form       = document.getElementById('update-form');
-    const btnSubmit  = document.getElementById('btn-submit');
-    const msgEl      = document.getElementById('auth-message');
+    const loadingEl = document.getElementById('loading-state');
+    const invalidEl = document.getElementById('invalid-state');
+    const formEl    = document.getElementById('form-state');
+    const successEl = document.getElementById('success-state');
+    const form      = document.getElementById('update-form');
+    const btnSubmit = document.getElementById('btn-submit');
+    const msgEl     = document.getElementById('auth-message');
 
     function showMessage(text, type) {
       msgEl.innerText = text;
@@ -253,70 +231,104 @@
       msgEl.style.display = 'block';
     }
 
-    // O Supabase envia o token no hash da URL: #access_token=...&type=recovery
-    const hash = window.location.hash.substring(1);
-    const params = new URLSearchParams(hash);
-    const accessToken = params.get('access_token');
-    const type = params.get('type');
-
-    if (!accessToken || type !== 'recovery') {
+    function showState(state) {
       loadingEl.style.display = 'none';
-      invalidEl.style.display = 'block';
+      invalidEl.style.display = 'none';
+      formEl.style.display    = 'none';
+      successEl.style.display = 'none';
+      document.getElementById(state + '-state').style.display = 'block';
+    }
+
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Suporte aos dois formatos de link do Supabase:
+    // Formato antigo: #access_token=...&type=recovery
+    // Formato novo (PKCE): ?token_hash=...&type=recovery
+    const hashParams  = new URLSearchParams(window.location.hash.substring(1));
+    const queryParams = new URLSearchParams(window.location.search);
+
+    const tokenHash   = queryParams.get('token_hash');
+    const type        = queryParams.get('type') || hashParams.get('type');
+    const accessToken = hashParams.get('access_token');
+    const errorCode   = hashParams.get('error_code') || queryParams.get('error_code');
+
+    // Link com erro explícito (expirado, inválido)
+    if (errorCode) {
+      showState('invalid');
       return;
     }
 
-    // Seta a sessão com o token do link
     try {
-      const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-      const { error } = await client.auth.setSession({
-        access_token: accessToken,
-        refresh_token: params.get('refresh_token') || ''
-      });
+      // Formato novo: token_hash via query string
+      if (tokenHash && type === 'recovery') {
+        const { error } = await client.auth.verifyOtp({
+          token_hash: tokenHash,
+          type: 'recovery'
+        });
+        if (error) throw error;
+        showState('form');
 
-      if (error) throw error;
+      // Formato antigo: access_token via hash
+      } else if (accessToken && type === 'recovery') {
+        const { error } = await client.auth.setSession({
+          access_token: accessToken,
+          refresh_token: hashParams.get('refresh_token') || ''
+        });
+        if (error) throw error;
+        showState('form');
 
-      loadingEl.style.display = 'none';
-      formEl.style.display = 'block';
+      // Sem token — escuta evento PASSWORD_RECOVERY do Supabase
+      } else {
+        // Aguarda o evento de auth state change
+        const { data: { subscription } } = client.auth.onAuthStateChange(async (event, session) => {
+          if (event === 'PASSWORD_RECOVERY') {
+            subscription.unsubscribe();
+            showState('form');
+          }
+        });
 
-      form.onsubmit = async (e) => {
-        e.preventDefault();
-        const password = document.getElementById('password').value;
-        const confirm  = document.getElementById('password-confirm').value;
-
-        if (password !== confirm) {
-          showMessage('As senhas não coincidem.', 'error');
-          return;
-        }
-
-        if (password.length < 6) {
-          showMessage('A senha deve ter pelo menos 6 caracteres.', 'error');
-          return;
-        }
-
-        btnSubmit.disabled = true;
-        btnSubmit.innerText = 'Atualizando...';
-
-        try {
-          const { error: updateError } = await client.auth.updateUser({ password });
-          if (updateError) throw updateError;
-
-          formEl.style.display = 'none';
-          successEl.style.display = 'block';
-
-          setTimeout(() => {
-            window.location.href = 'login.html';
-          }, 3000);
-        } catch (err) {
-          showMessage(err.message || 'Erro ao atualizar senha. Tente novamente.', 'error');
-          btnSubmit.disabled = false;
-          btnSubmit.innerText = 'Atualizar Senha';
-        }
-      };
-
+        // Timeout de segurança
+        setTimeout(() => {
+          if (loadingEl.style.display !== 'none') {
+            showState('invalid');
+          }
+        }, 5000);
+      }
     } catch (err) {
-      loadingEl.style.display = 'none';
-      invalidEl.style.display = 'block';
+      console.error('Erro ao verificar token:', err);
+      showState('invalid');
     }
+
+    // Submissão da nova senha
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const password = document.getElementById('password').value;
+      const confirm  = document.getElementById('password-confirm').value;
+
+      if (password !== confirm) {
+        showMessage('As senhas não coincidem.', 'error');
+        return;
+      }
+      if (password.length < 6) {
+        showMessage('A senha deve ter pelo menos 6 caracteres.', 'error');
+        return;
+      }
+
+      btnSubmit.disabled = true;
+      btnSubmit.innerText = 'Atualizando...';
+
+      try {
+        const { error } = await client.auth.updateUser({ password });
+        if (error) throw error;
+
+        showState('success');
+        setTimeout(() => { window.location.href = 'login.html'; }, 3000);
+      } catch (err) {
+        showMessage(err.message || 'Erro ao atualizar senha. Tente novamente.', 'error');
+        btnSubmit.disabled = false;
+        btnSubmit.innerText = 'Atualizar Senha';
+      }
+    };
   });
 </script>
 
